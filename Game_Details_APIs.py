@@ -44,7 +44,7 @@ counter=0
 for i in epcr:
     counter+=1
     print(counter)
-    if i is not str:
+    if type(i) is not str:
         api2=None
     else:
         first_soup = bs(i, 'html.parser')
@@ -67,7 +67,7 @@ for i in epcr:
   
 epcr_api_html=[]
 for i in epcr_api:
-    if i is not str:
+    if type(i) is not str:
         api=None
     else:
         api=download(i)
@@ -84,7 +84,7 @@ counter=0
 for i in p14:
     counter+=1
     print(counter)
-    if i is not str: 
+    if type(i) is not str: 
         api2=None
     else:
         first_soup = bs(i, 'html.parser')
@@ -106,7 +106,7 @@ for i in p14:
     
 p14_api_html=[]
 for i in p14_api:
-    if i is not str:
+    if type(i) is not str:
         api=None
     else:
         api=download(i)
@@ -124,7 +124,7 @@ counter=0
 for i in chal:
     counter+=1
     print(counter)
-    if i is not str:
+    if type(i) is not str:
         api2=None
     else:
         first_soup = bs(i, 'html.parser')
@@ -145,7 +145,7 @@ for i in chal:
     chal_api.append(api2)
     
 chal_api_html=[]
-for i in chal_api:
+for type(i) in chal_api:
     if i is not str:
         api=None
     else:
