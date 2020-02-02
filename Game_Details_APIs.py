@@ -14,6 +14,12 @@ p14=list(p14['0'])
 epcr=list(epcr['0'])
 chal=list(chal['0'])
 
+check=p14[0]
+
+p14content=['sotic_wp_widget-132-content','sotic_wp_widget-134-content','sotic_wp_widget-136-content','sotic_wp_widget-141-content','sotic_wp_widget-142-content']
+epcrcontent=['sotic_wp_widget-83-content','sotic_wp_widget-36-content','sotic_wp_widget-158-content','sotic_wp_widget-155-content','sotic_wp_widget-37-content','sotic_wp_widget-121-content','sotic_wp_widget-122-content']
+
+
 def download(url, user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'\
              , num_retries=2, charset='utf-8'):
     print('Downloading:', url)
@@ -40,81 +46,103 @@ def find_between(s,start,end):
 ##################################################
         
 epcr_api=[]
-counter=0 
-for i in epcr:
-    counter+=1
-    print(counter)
-    if type(i) is not str:
-        api2=None
-    else:
-        first_soup = bs(i, 'html.parser')
-        first_api=first_soup.find('div',attrs={'class':'sotic-widget-content'})
-        text=first_api.prettify()
-        split=text.split(' ')
-        url = split[8]
-        widget_id=split[3]
-        param=split[6]
-        api_url=[url,widget_id,param]
-        api=[]
-        for i in api_url:
-            start="\""
-            end="\""
-            elm = find_between(i,start,end)
-            api.append(elm)
-        api2=api[0]+api[1]+'?&params='+api[2]
-    epcr_api.append(api2)
-
-  
+link=0
+for j in epcrcontent:
+    link+=1
+    counter=0
+    print(link)
+    apiz=[]
+    for i in epcr:
+        if type(i) is not str:
+            api2=None
+        else:
+            counter+=1
+            print(str(link) + ' & ' + str(counter))
+            first_soup = bs(i, 'html.parser')
+            first_api=first_soup.find('div',attrs={'id':j})
+            if type(first_api) is None:
+                api2=None
+            else:
+                text=first_api.prettify()
+                split=text.split(' ')
+                url2 = split[8]
+                widget_id=split[3]
+                param=split[6]
+                api_url=[url2,widget_id,param]
+                api=[]
+                for i in api_url:
+                    start="\""
+                    end="\""
+                    elm = find_between(i,start,end)
+                    api.append(elm)
+                api2='https://i7k8x8j8.ssl.hwcdn.net/'+api[1]+'?&params='+api[2]
+        apiz.append(api2)
+    epcr_api.append(apiz)
+ 
 epcr_api_html=[]
 for i in epcr_api:
-    if type(i) is not str:
-        api=None
-    else:
-        api=download(i)
-    epcr_api_html.append(api)
+    apix=[]
+    for j in i:
+        if type(j) is not str:
+            api=None
+        else:
+            api=download(j)
+        apix.append(api)
+    epcr_api_html.append(apix)
 time.sleep(200)   
 epcr_api_df=pd.DataFrame(epcr_api_html)
+epcr_Api_df=epcr_api_df.T
 
-savedfile=epcr_api_df.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Report APIs/Game Stats/EPCR API.csv', index=False)
+savedfile=epcr_Api_df.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Report APIs/epcr API Full.csv', index=False)
 
 ###################################################
 
 p14_api=[]
-counter=0 
-for i in p14:
-    counter+=1
-    print(counter)
-    if type(i) is not str: 
-        api2=None
-    else:
+link=0
+for j in p14content:
+    link+=1
+    counter=0
+    print(link)
+    apiz=[]
+    for i in p14:
+        counter+=1
+        print(str(link) + ' & ' + str(counter))
         first_soup = bs(i, 'html.parser')
-        first_api=first_soup.find('div',attrs={'class':'sotic-widget-content'})
-        text=first_api.prettify()
-        split=text.split(' ')
-        url2 = split[8]
-        widget_id=split[3]
-        param=split[6]
-        api_url=[url2,widget_id,param]
-        api=[]
-        for i in api_url:
-            start="\""
-            end="\""
-            elm = find_between(i,start,end)
-            api.append(elm)
-        api2='https://i7k8x8j8.ssl.hwcdn.net/'+api[1]+'?&params='+api[2]
-    p14_api.append(api2)
-    
+        first_api=first_soup.find('div',attrs={'id':j})
+        if type(first_api) is None:
+            api2=None
+        else:
+            text=first_api.prettify()
+            split=text.split(' ')
+            url2 = split[8]
+            widget_id=split[3]
+            param=split[6]
+            api_url=[url2,widget_id,param]
+            api=[]
+            for i in api_url:
+                start="\""
+                end="\""
+                elm = find_between(i,start,end)
+                api.append(elm)
+            api2='https://i7k8x8j8.ssl.hwcdn.net/'+api[1]+'?&params='+api[2]
+        apiz.append(api2)
+    p14_api.append(apiz)
+ 
 p14_api_html=[]
 for i in p14_api:
-    if type(i) is not str:
-        api=None
-    else:
-        api=download(i)
-    p14_api_html.append(api)
+    apix=[]
+    for j in i:
+        if type(j) is not str:
+            api=None
+        else:
+            api=download(j)
+        apix.append(api)
+    p14_api_html.append(apix)
 time.sleep(200)   
 p14_api_df=pd.DataFrame(p14_api_html)
+p14_Api_df=p14_api_df.T
 
-savedfile=p14_api_df.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Report APIs/Game Stats/P14 API.csv', index=False)
+savedfile=p14_Api_df.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Report APIs/P14 API Full.csv', index=False)
 
 
 ###################################################
