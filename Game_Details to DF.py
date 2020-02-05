@@ -3,9 +3,9 @@ import json
 from bs4 import BeautifulSoup as bs
 import numpy as np
 
-p14=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Report APIs/Game Stats/P14 API.csv', encoding='latin-1')
-epcr=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Report APIs/Game Stats/EPCR API.csv', encoding='latin-1')
-chal=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Report APIs/Game Stats/CHAL API.csv', encoding='latin-1')
+p14=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Report APIs/P14 API full.csv', encoding='latin-1')
+epcr=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Report APIs/epcr API full.csv', encoding='latin-1')
+chal=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Report APIs/chal API full.csv', encoding='latin-1')
 
 p14=list(p14['0'])
 epcr=list(epcr['0'])
@@ -158,8 +158,7 @@ def addSeason(row):
 
 p14Fixture_List['Season']=p14Fixture_List.apply(lambda row: addSeason(row), axis=1)
 
-savedFile=p14Fixture_List.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Main Content/P14 Main Content.csv'\
-                              ,index=False)
+savedFile=p14Fixture_List.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Main Content/P14 Main Content.csv',index=False)
 
 ############################################################################### 
 
@@ -173,6 +172,7 @@ epcrvenue=[]
 epcrattend=[]
 epcrkick_off=[]
 epcrref=[]
+
 
 for i in epcr:
     if type(i) is not str:
@@ -258,12 +258,11 @@ for i in epcr:
             mround=info__.text
         epcrmatchRound.append(mround)
     
-details=[epcrtournament,epcrmatchRound,epcrdate,epcrkick_off,epcrhometeam,epcrScore,epcrawayteam,epcrvenue,
-         epcrattend,epcrref]
+details=[epcrtournament,epcrmatchRound,epcrdate,epcrkick_off,epcrhometeam,epcrScore,epcrawayteam,epcrvenue,epcrattend,epcrref]
 epcrfixture_list=pd.DataFrame(details)
 epcrFixture_List=epcrfixture_list.T
-epcrFixture_List=epcrFixture_List.rename(columns={0:'Tournament',1:'Round',2:'Date',
-                                          3:'Kick Off',4:'Home Team',5:'Score'
+epcrFixture_List=epcrFixture_List.rename(columns={0:'Tournament',1:'Round',2:'Date',\
+                                          3:'Kick Off',4:'Home Team',5:'Score'\
                                           ,6:'Away Team',7:'Venue',8:'Attendance',9:'Ref'})
     
 epcrFixture_List.info()
@@ -277,9 +276,11 @@ epcrFixture_List['Round']=epcrFixture_List['Round'].str.strip()
 epcrFixture_List['Score']=epcrFixture_List['Score'].str.strip()
 epcrFixture_List['Venue']=epcrFixture_List['Venue'].str.strip()
 epcrFixture_List['Attendance']=epcrFixture_List['Attendance'].str.strip()
+epcrFixture_List['Home Team']=epcrFixture_List['Home Team'].str.strip()
+epcrFixture_List['Away Team']=epcrFixture_List['Away Team'].str.strip()
 epcrFixture_List['Ref']=epcrFixture_List['Ref'].str.strip()
-savedFile=epcrFixture_List.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Main Content/EPCR Main Content.csv'
-                              ,index=False)
+epcrFixture_List.info()
+savedFile=epcrFixture_List.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Main Content/EPCR Main Content.csv', index=False)
 
 
 
@@ -380,12 +381,12 @@ for i in chal:
             mround=info__.text
         chalmatchRound.append(mround)
     
-details=[chaltournament,chalmatchRound,chaldate,chalkick_off,chalhometeam,chalScore,chalawayteam,chalvenue,
+details=[chaltournament,chalmatchRound,chaldate,chalkick_off,chalhometeam,chalScore,chalawayteam,chalvenue,\
          chalattend,chalref]
 chalfixture_list=pd.DataFrame(details)
 chalFixture_List=chalfixture_list.T
-chalFixture_List=chalFixture_List.rename(columns={0:'Tournament',1:'Round',2:'Date',
-                                          3:'Kick Off',4:'Home Team',5:'Score'
+chalFixture_List=chalFixture_List.rename(columns={0:'Tournament',1:'Round',2:'Date',\
+                                          3:'Kick Off',4:'Home Team',5:'Score'\
                                           ,6:'Away Team',7:'Venue',8:'Attendance',9:'Ref'})
     
 chalFixture_List.info()
@@ -400,5 +401,6 @@ chalFixture_List['Score']=chalFixture_List['Score'].str.strip()
 chalFixture_List['Venue']=chalFixture_List['Venue'].str.strip()
 chalFixture_List['Attendance']=chalFixture_List['Attendance'].str.strip()
 chalFixture_List['Ref']=chalFixture_List['Ref'].str.strip()
-savedFile=chalFixture_List.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Main Content/CHAL Main Content.csv'
-                              ,index=False)
+chalFixture_List['Home Team']=chalFixture_List['Home Team'].str.strip()
+chalFixture_List['Away Team']=chalFixture_List['Away Team'].str.strip()
+savedFile=chalFixture_List.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Main Content/CHAL Main Content.csv',index=False)
