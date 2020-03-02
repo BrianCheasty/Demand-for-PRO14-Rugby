@@ -5,7 +5,7 @@ import pandas as pd
 import time
 
 
-
+time
 p14=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports HTML/PRO14 HTML.csv', encoding='latin-1')
 epcr=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports HTML/EPCR Champions HTML.csv', encoding='latin-1')
 chal=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports HTML/EPCR Challenge HTML.csv', encoding='latin-1')
