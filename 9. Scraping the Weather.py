@@ -1,29 +1,43 @@
 import pandas as pd
+import numpy as np
 from selenium import webdriver
 from bs4 import BeautifulSoup as bs
+import time
+
+time1=time.time()
 
 games=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Feature Creation1.csv',encoding='latin-1')
-
+#games=games.loc[0:1,:]
 def maxtemp(row):
     url=row['Stadium URL']
     date=row['Date']
-    driver = webdriver.Firefox(executable_path=r'C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data_set_creation/PRO14/Code/geckodriver')
+    driver = webdriver.Firefox(executable_path=r'C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Code/Demand-for-PRO14-Rugby/geckodriver')
     #driver.maximize_window()
     
     try:
-        print('getting '+date+url)
-        driver.get(url)
-        dateinput= driver.find_element_by_id('ctl00_MainContentHolder_txtPastDate')
-        dateinput.send_keys(date)
-        submit=driver.find_element_by_id("ctl00_MainContentHolder_butShowPastWeather").click()
-        content=driver.page_source
-        driver.quit()
-        html=bs(content, 'html.parser')
-        html2=html.find('div',attrs={'class':'weather_prim_info independent'})
-        html3=html2.find('div',attrs={'class':'max_temp'})
-        html4=html3.find('div',attrs={'class':'count'})
-        max_temp=html4.get_text()
-        return max_temp 
+            print('Trying getting '+date+url)
+            driver.get(url)
+            dateinput= driver.find_element_by_id('ctl00_MainContentHolder_txtPastDate')
+            dateinput.send_keys(date)
+            submit=driver.find_element_by_id("ctl00_MainContentHolder_butShowPastWeather").click()
+            content=driver.page_source
+            driver.quit()
+            html=bs(content, 'html.parser')
+            
+            html2=html.find('div',attrs={'class':'weather_prim_info independent'})
+            html3=html2.find('div',attrs={'class':'max_temp'})
+            html4=html3.find('div',attrs={'class':'count'})
+            max_temp=html4.get_text()
+            html5=html2.find('div',attrs={'class':'info_item elem_item'})
+            rain=html5.get_text()
+            html5=html.find('div',attrs={'class':'tb_row tb_wind'})
+            html6=html5.find_all('div',attrs={'class':'tb_cont_item'})
+            wind=[]
+            for i in html6:
+                x= i.get_text()
+                wind.append(x)
+            windspeed=wind[6]
+            return max_temp,rain,windspeed
     except:
         try:
             driver.quit()
@@ -35,100 +49,117 @@ def maxtemp(row):
             content=driver.page_source
             driver.quit()
             html=bs(content, 'html.parser')
+            
             html2=html.find('div',attrs={'class':'weather_prim_info independent'})
             html3=html2.find('div',attrs={'class':'max_temp'})
             html4=html3.find('div',attrs={'class':'count'})
             max_temp=html4.get_text()
-            return max_temp
+            html5=html2.find('div',attrs={'class':'info_item elem_item'})
+            rain=html5.get_text()
+            html5=html.find('div',attrs={'class':'tb_row tb_wind'})
+            html6=html5.find_all('div',attrs={'class':'tb_cont_item'})
+            wind=[]
+            for i in html6:
+                x= i.get_text()
+                wind.append(x)
+            windspeed=wind[6]
+            return max_temp,rain,windspeed
         except:
             driver.quit()
             print('failed '+url+date)
-            max_temp=''
-            return max_temp
-pRO14['Max Temp']=pRO14.apply(lambda row:maxtemp(row), axis=1) 
+            max_temp=np.nan
+            rain=np.nan
+            windspeed=np.nan
+            return max_temp,rain,windspeed
+games['Temperature'],games['Rain'],games['Wind']=zip(*games.apply(lambda row:maxtemp(row), axis=1))
+time2=time.time()
+tottime=(time2-time1)/60
+print('The total time was '+str(tottime)+' Minutes')
 
-pR014NA=pRO14[(pRO14['Max Temp']=='')]
-pR0142=pRO14[(pRO14['Max Temp']!='')]
-pR014NA['Max Temp']=pR014NA.apply(lambda row:maxtemp(row), axis=1)
-
-pRO14df=pR0142.append(pR014NA)
-
-
-def rain(row):
-    url=row['Stadium URL']
-    date=row['Date']
-    driver = webdriver.Firefox(executable_path=r'C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data_set_creation/PRO14/Code/geckodriver')
-    #driver.maximize_window()
+#pR014NA=pRO14[(pRO14['Max Temp']=='')]
+#pR0142=pRO14[(pRO14['Max Temp']!='')]
+#pR014NA['Max Temp']=pR014NA.apply(lambda row:maxtemp(row), axis=1)
+#
+#pRO14df=pR0142.append(pR014NA)
+#
+#
+#def rain(row):
+#    url=row['Stadium URL']
+#    date=row['Date']
+#    driver = webdriver.Firefox(executable_path=r'C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data_set_creation/PRO14/Code/geckodriver')
+#    #driver.maximize_window()
+#    
+#    try:
+#        print('getting '+date+url)
+#        driver.get(url)
+#        dateinput= driver.find_element_by_id('ctl00_MainContentHolder_txtPastDate')
+#        dateinput.send_keys(date)
+#        submit=driver.find_element_by_id("ctl00_MainContentHolder_butShowPastWeather").click()
+#        content=driver.page_source
+#        driver.quit()
+#        html=bs(content, 'html.parser')
+#        
+#        html2=html.find('div',attrs={'class':'weather_prim_info independent'})
+#        html3=html2.find('div',attrs={'class':'info_item elem_item'})
+#        rain=html3.get_text()
+#        return rain 
+#    except:
+#        driver.quit()
+#        print('Returning Blank')
+#        rain = ''
+#        return rain
+#    
+#pRO14df['Rain']=pRO14df.apply(lambda row:rain(row), axis=1) 
+#
+#pR014NA2=pRO14df[(pRO14df['Rain']=='')]
+#pR014df2=pRO14df[(pRO14df['Rain']!='')]
+#pR014NA2['Rain']=pR014NA2.apply(lambda row:rain(row), axis=1)
+#
+#pRO14df_2=pR014df2.append(pR014NA2)    
     
-    try:
-        print('getting '+date+url)
-        driver.get(url)
-        dateinput= driver.find_element_by_id('ctl00_MainContentHolder_txtPastDate')
-        dateinput.send_keys(date)
-        submit=driver.find_element_by_id("ctl00_MainContentHolder_butShowPastWeather").click()
-        content=driver.page_source
-        driver.quit()
-        html=bs(content, 'html.parser')
-        html2=html.find('div',attrs={'class':'weather_prim_info independent'})
-        html3=html2.find('div',attrs={'class':'info_item elem_item'})
-        rain=html3.get_text()
-        return rain 
-    except:
-        driver.quit()
-        print('Returning Blank')
-        rain = ''
-        return rain
-    
-pRO14df['Rain']=pRO14df.apply(lambda row:rain(row), axis=1) 
-
-pR014NA2=pRO14df[(pRO14df['Rain']=='')]
-pR014df2=pRO14df[(pRO14df['Rain']!='')]
-pR014NA2['Rain']=pR014NA2.apply(lambda row:rain(row), axis=1)
-
-pRO14df_2=pR014df2.append(pR014NA2)    
-    
-pR014NA3=pRO14df_2[(pRO14df_2['Rain']=='')]
-pR0143=pRO14df_2[(pRO14df_2['Rain']!='')]
-pR014NA3['Rain']=pR014NA3.apply(lambda row:rain(row), axis=1)    
-    
-pRO14df_3=pR0143.append(pR014NA3)     
-    
-def wind(row):
-    url=row['Stadium URL']
-    date=row['Date']
-    driver = webdriver.Firefox(executable_path=r'C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data_set_creation/PRO14/Code/geckodriver')
-    #driver.maximize_window()
-    
-    try:
-        print('getting '+date+url)
-        driver.get(url)
-        dateinput= driver.find_element_by_id('ctl00_MainContentHolder_txtPastDate')
-        dateinput.send_keys(date)
-        submit=driver.find_element_by_id("ctl00_MainContentHolder_butShowPastWeather").click()
-        content=driver.page_source
-        driver.quit()
-        html=bs(content, 'html.parser')
-        html2=html.find('div',attrs={'class':'tb_row tb_wind'})
-        html3=html2.find_all('div',attrs={'class':'tb_cont_item'})
-        wind=[]
-        for i in html3:
-            x= i.get_text()
-            wind.append(x)
-        windspeed=wind[6]
-        return windspeed
-    except:
-        driver.quit()
-        print('Returning Blank')
-        windspeed = ''
-        return windspeed
-    
-pRO14df_3['WindSpeed']=pRO14df_3.apply(lambda row:wind(row), axis=1)     
-    
-pR014NA4=pRO14df_3[(pRO14df_3['WindSpeed']=='')]
-pR0144=pRO14df_3[(pRO14df_3['WindSpeed']!='')]
-pR014NA4['WindSpeed']=pR014NA4.apply(lambda row:wind(row), axis=1)    
-    
-pRO14df_4=pR0144.append(pR014NA4) 
+#pR014NA3=pRO14df_2[(pRO14df_2['Rain']=='')]
+#pR0143=pRO14df_2[(pRO14df_2['Rain']!='')]
+#pR014NA3['Rain']=pR014NA3.apply(lambda row:rain(row), axis=1)    
+#    
+#pRO14df_3=pR0143.append(pR014NA3)     
+#    
+#def wind(row):
+#    url=row['Stadium URL']
+#    date=row['Date']
+#    driver = webdriver.Firefox(executable_path=r'C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data_set_creation/PRO14/Code/geckodriver')
+#    #driver.maximize_window()
+#    
+#    try:
+#        print('getting '+date+url)
+#        driver.get(url)
+#        dateinput= driver.find_element_by_id('ctl00_MainContentHolder_txtPastDate')
+#        dateinput.send_keys(date)
+#        submit=driver.find_element_by_id("ctl00_MainContentHolder_butShowPastWeather").click()
+#        content=driver.page_source
+#        driver.quit()
+#        html=bs(content, 'html.parser')
+#        
+#        html2=html.find('div',attrs={'class':'tb_row tb_wind'})
+#        html3=html2.find_all('div',attrs={'class':'tb_cont_item'})
+#        wind=[]
+#        for i in html3:
+#            x= i.get_text()
+#            wind.append(x)
+#        windspeed=wind[6]
+#        return windspeed
+#    except:
+#        driver.quit()
+#        print('Returning Blank')
+#        windspeed = ''
+#        return windspeed
+#    
+#pRO14df_3['WindSpeed']=pRO14df_3.apply(lambda row:wind(row), axis=1)     
+#    
+#pR014NA4=pRO14df_3[(pRO14df_3['WindSpeed']=='')]
+#pR0144=pRO14df_3[(pRO14df_3['WindSpeed']!='')]
+#pR014NA4['WindSpeed']=pR014NA4.apply(lambda row:wind(row), axis=1)    
+#    
+#pRO14df_4=pR0144.append(pR014NA4) 
 
 def gettemp(row):
     temp=row['Max Temp'].split('°')

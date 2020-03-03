@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 
 games=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Combined Content/Fixtures and Results.csv', encoding='latin-1')
 games=games[(games['Home Team'].notnull())]
@@ -372,9 +373,15 @@ def seturl(row):
         x='https://www.worldweatheronline.com/glasgow-weather-history/glasgow-city/gb.aspx'
     elif row['Venue']=='Sportsground':
         x='https://www.worldweatheronline.com/galway-weather-history/galway/ie.aspx'
+    elif row['Venue']=='The Sportsground':
+        x='https://www.worldweatheronline.com/galway-weather-history/galway/ie.aspx'
+    elif row['Venue']=='Stadio Comunale di Monigo':
+        x='https://www.worldweatheronline.com/treviso-weather-history/veneto/it.aspx'
     elif row['Venue']=='Stadio Monigo':
         x='https://www.worldweatheronline.com/treviso-weather-history/veneto/it.aspx'
     elif row['Venue']=='Stadio Sergio Lanfranchi':
+        x='https://www.worldweatheronline.com/parma-weather-history/emilia-romagna/it.aspx'
+    elif row['Venue']=='La Ghirada':
         x='https://www.worldweatheronline.com/parma-weather-history/emilia-romagna/it.aspx'
     elif row['Venue']=='Stadio Tommaso Fattori':
         x='https://www.worldweatheronline.com/rome-weather-history/lazio/it.aspx'
@@ -397,12 +404,20 @@ def seturl(row):
     elif row['Venue']=='Rugby Park':
         x='https://www.worldweatheronline.com/galway-weather-history/galway/ie.aspx'     
     else:
-        x=''
+        x=np.nan
     return x
     
 games5['Stadium URL']=games5.apply(lambda row:seturl(row), axis=1) 
+check=games5[(games5['Stadium URL'].isnull())]
 
 savedfile=games5.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Feature Creation1.csv', index=False) 
 
+def test(row):
+    if row['Tournament']=='League':
+        x='Test 1'
+    if row['Tournament']=='League':
+        y='Test 2'
+    return x,y
     
+games5['test']=games5.apply(lambda row:test(row), axis=1) 
     
