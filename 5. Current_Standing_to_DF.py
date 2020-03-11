@@ -33,6 +33,7 @@ for i in p14:
            results.append(i.text) 
     hometeam_position.append(results[0])
     awayteam_position.append(results[1])
+    print(results[0],results[1])
 
 details=[hometeam_position,awayteam_position]
 fixture_list=pd.DataFrame(details)
