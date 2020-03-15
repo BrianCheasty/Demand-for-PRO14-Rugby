@@ -1,9 +1,13 @@
 import pandas as pd
 import numpy as np
 
-games=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Feature Creation2.csv',encoding='latin-1')
-games=games[(games['Home Team']!=('Southern Kings'))]
-games=games[(games['Away Team']!=('Southern Kings'))]
+gamesa=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Feature Creation2.csv',encoding='latin-1')
+gamesb=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Feature Creation2b.csv',encoding='latin-1')
+games=gamesa.append(gamesb)
+games=games.reset_index()
+games=games.drop(columns=['index'])
+#games=games[(games['Home Team']!=('Southern Kings'))]
+#games=games[(games['Away Team']!=('Southern Kings'))]
 games['Last_EPCR']=games['Last_EPCR'].fillna(0)
 games['Last_P14']=games['Last_P14'].fillna(0)
 games['Last Game in Comp']=games['Last_P14']+games['Last_EPCR']
@@ -67,15 +71,21 @@ for i in teams:
     df1=games[(games['Home Team'].str.contains(i)) | (games['Away Team'].str.contains(i))]
     for j in season:
         df2=df1[(df1['Season'].str.contains(j))]
-        df2=df2.sort_values(by=['Date'])
-        df2['Home Points']=df2.apply(lambda row: tries(row), axis=1)
-        df2['Home Total Points']=df2['Home Points'].expanding(1).sum()
-        df2['Total Points Avail TD']=df2['Round']*5
-        df3=df2[(df2['Home Team'].str.contains(i))]
-        df.append(df3)
+        if len(df2)==0:
+            continue
+        else:
+            df2=df2.sort_values(by=['Date'])
+            df2['Home Points']=df2.apply(lambda row: tries(row), axis=1)
+            df2['Home Total P']=df2['Home Points'].expanding(1).sum()
+            df2['Home Total Points']=df2['Home Total P'].shift(1)
+            df2['Total Points Avail TD']=(df2['Round'].shift(1))*5
+            df3=df2[(df2['Home Team'].str.contains(i))]
+            df.append(df3)
     df4=pd.concat(df)
     gamesA.append(df4)
 gamesB=pd.concat(gamesA) 
+
+
 
 gamesB['Date']=pd.to_datetime(gamesB['Date'])
 gamesB['Day Of Week']=gamesB['Date'].dt.dayofweek
@@ -98,9 +108,11 @@ def time(row):
 gamesB['Kick Off Hour']=gamesB.apply(lambda row:time(row), axis=1) 
 
 gamesB['Home Winning Percentage']=round(gamesB['Home Total Points']/gamesB['Total Points Avail TD'],2)
+gamesB['Home Winning Percentage']=gamesB['Home Winning Percentage'].fillna(0)
 
 gamesB.loc[((gamesB['Home Team'].str.contains('Munster|Leinster|Connacht|Ulster'))&(gamesB['Away Team'].str.contains('Munster|Leinster|Connacht|Ulster'))),'Derby']='Derby'
 gamesB.loc[((gamesB['Home Team'].str.contains('Edinburgh|Glasgow'))&(gamesB['Away Team'].str.contains('Edinburgh|Glasgow'))),'Derby']='Derby'
+gamesB.loc[((gamesB['Home Team'].str.contains('Kings|Cheetahs'))&(gamesB['Away Team'].str.contains('Kings|Cheetahs'))),'Derby']='Derby'
 gamesB.loc[((gamesB['Home Team'].str.contains('Treviso|Zebre'))&(gamesB['Away Team'].str.contains('Treviso|Zebre'))),'Derby']='Derby'
 gamesB.loc[((gamesB['Home Team'].str.contains('Ospreys|Dragons|Cardiff|Scarlets'))&(gamesB['Away Team'].str.contains('Ospreys|Dragons|Cardiff|Scarlets'))),'Derby']='Derby'
 gamesB['Derby']=gamesB['Derby'].fillna('Non Derby')
@@ -229,10 +241,10 @@ gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].st
 gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Ospreys'))),'Years sinceP14 Win']=6
 gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Ospreys'))),'Years sinceP14 Win']=5
 gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Ospreys'))),'Years sinceP14 Win']=4
-gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Ospreys'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Ospreys'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Ospreys'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Ospreys'))),'Years sinceEPCR Win']=30
+gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Ospreys'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Ospreys'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Ospreys'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Ospreys'))),'Years sinceEPCR Win']=25
 
 gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Munster'))),'Years sinceP14 Win']=8
 gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Munster'))),'Years sinceP14 Win']=7
@@ -247,10 +259,10 @@ gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].st
 gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Scarlets'))),'Years sinceP14 Win']=1
 gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Scarlets'))),'Years sinceP14 Win']=16
 gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Scarlets'))),'Years sinceP14 Win']=16
-gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Scarlets'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Scarlets'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Scarlets'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Scarlets'))),'Years sinceEPCR Win']=30
+gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Scarlets'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Scarlets'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Scarlets'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Scarlets'))),'Years sinceEPCR Win']=25
 
 gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Ulster'))),'Years sinceP14 Win']=13
 gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Ulster'))),'Years sinceP14 Win']=12
@@ -265,64 +277,64 @@ gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].st
 gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Connacht'))),'Years sinceP14 Win']=2
 gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Connacht'))),'Years sinceP14 Win']=1
 gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Connacht'))),'Years sinceP14 Win']=14
-gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Connacht'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Connacht'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Connacht'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Connacht'))),'Years sinceEPCR Win']=30
+gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Connacht'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Connacht'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Connacht'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Connacht'))),'Years sinceEPCR Win']=25
 
 gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Glasgow'))),'Years sinceP14 Win']=4
 gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Glasgow'))),'Years sinceP14 Win']=3
 gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Glasgow'))),'Years sinceP14 Win']=2
 gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Glasgow'))),'Years sinceP14 Win']=1
-gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Glasgow'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Glasgow'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Glasgow'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Glasgow'))),'Years sinceEPCR Win']=30
+gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Glasgow'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Glasgow'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Glasgow'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Glasgow'))),'Years sinceEPCR Win']=25
 
-gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceEPCR Win']=30
+gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Edinburgh'))),'Years sinceEPCR Win']=25
 
-gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Cardiff'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Cardiff'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Cardiff'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Cardiff'))),'Years sinceP14 Win']=21
+gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Cardiff'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Cardiff'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Cardiff'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Cardiff'))),'Years sinceP14 Win']=19
 gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Cardiff'))),'Years sinceEPCR Win']=22
 gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Cardiff'))),'Years sinceEPCR Win']=21
 gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Cardiff'))),'Years sinceEPCR Win']=20
 gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Cardiff'))),'Years sinceEPCR Win']=19
 
-gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceEPCR Win']=30
+gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Zebre'))),'Years sinceEPCR Win']=25
 
-gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceEPCR Win']=30
+gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Treviso'))),'Years sinceEPCR Win']=25
 
-gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceP14 Win']=21
-gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceEPCR Win']=30
-gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceEPCR Win']=30
+gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceP14 Win']=19
+gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceEPCR Win']=25
+gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Home Team'].str.contains('Dragons'))),'Years sinceEPCR Win']=25
 
 gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Venue'].str.contains('Liberty Stadium'))),'Stadium Age']=13
 gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Venue'].str.contains('Liberty Stadium'))),'Stadium Age']=12
@@ -554,9 +566,10 @@ cup.loc[((cup['Away Team'].str.contains('Oyonnax'))&cup['Away Table Position'].i
 cup.loc[((cup['Away Team'].str.contains('Brive'))&cup['Away Table Position'].isnull()),'Home Table Position']=4
 
 
-league.loc[league['Season'].str.contains('2015/2016 Season|2016/2017 Season'),'Table Difference']=league['Home Table Position']-league['Away Table Position']
-league.loc[league['Season'].str.contains('2017/2018 Season|2018/2019 Season'),'Table Difference']=(league['Home Table Position']-league['Away Table Position'])*2
-cup['Table Difference']=(cup['Home Table Position']-cup['Away Table Position'])*4
+check=league[(league['Home Table Position'].isnull())]
+league.loc[league['Season'].str.contains('2015/2016 Season|2016/2017 Season'),'Table Difference']=(league['Home Table Position']-league['Away Table Position'])
+league.loc[league['Season'].str.contains('2017/2018 Season|2018/2019 Season'),'Table Difference']=(((league['Home Table Position']-league['Away Table Position'])+1)*2)
+cup['Table Difference']=((cup['Home Table Position']-cup['Away Table Position']))*4
 
 
 league.loc[((league['Season'].str.contains('2015/2016|2016/2017'))&(league['Home Table Position']==4)),'Table Marker']=4
@@ -760,15 +773,20 @@ for i in averages:
         games4.loc[((games4['Away Team'].str.contains(j))&(games4['Away Win/Loss in Comp'].isnull())),'Away Win/Loss in Comp']=i
 games4['Away Win/Loss in Comp']=games4['Away Win/Loss in Comp'].fillna(0) 
 
-games4=games4.drop(columns=['Points Left','Kick Off','Table Marker','Stadium Percentage','Round','Stadium Capacity','Total Points Avail TD','Home Total Points',\
+games4=games4.drop(columns=['Points Left','Kick Off','Table Marker','Stadium Percentage','Stadium Capacity','Total Points Avail TD','Home Total Points',\
                           'Home Points','Away Win/loss/draw','Home Win/loss/draw','Home Score','Away Score','Home h2htries','Away h2htries','Home Wins',\
-                          'Away Wins','Draws','Played','Venue','Time','Days'])
+                          'Away Wins','Draws','Played','Time','Days'])
+games4['Uncertainty']=games4['Home Winning Percentage']*games4['homeVSaway Winning Percentage']
 
+print(games4['Max Temperature'].mean())
+print(games4['Max Temperature'].median())
+print(games4['Max Temperature'].min())
 print(games4['Max Temperature'].max())
+print(games4['Max Temperature'].std())
 def tempdummy(row):
-    if row['Max Temperature'] < 6:
+    if row['Max Temperature'] < 8.5:
         x='Cold'
-    elif row['Max Temperature'] > 14:
+    elif row['Max Temperature'] > 13.5:
         x='Warm'
     else:
         x='Mild'
@@ -776,11 +794,15 @@ def tempdummy(row):
 
 games4['Temperature']=games4.apply(lambda row: tempdummy(row), axis=1)
 
+print(games4['Wind Speed'].mean())
+print(games4['Wind Speed'].median())
+print(games4['Wind Speed'].min())
 print(games4['Wind Speed'].max())
+print(games4['Wind Speed'].std())
 def winddummy(row):
-    if row['Wind Speed'] < 8:
+    if row['Wind Speed'] < 14:
         x='Calm'
-    elif row['Wind Speed'] > 32:
+    elif row['Wind Speed'] > 26:
         x='Wild'
     else:
         x='Normal'
@@ -788,18 +810,24 @@ def winddummy(row):
 
 games4['Wind']=games4.apply(lambda row: winddummy(row), axis=1)
 
+print(games4['Rain Level'].mean())
+print(games4['Rain Level'].median())
+print(games4['Rain Level'].min())
+print(games4['Rain Level'].max())
 print(games4['Rain Level'].std())
 def raindummy(row):
-    if row['Wind Speed'] < 0.00:
+    if row['Rain Level'] <= 0.00:
         x='Dry'
-    elif row['Wind Speed'] > 3:
+    elif row['Rain Level'] > 8:
         x='Wet'
     else:
         x='Damp'
     return x
 
 games4['Rain']=games4.apply(lambda row: raindummy(row), axis=1)
+games4=games4[(~games['Home Team'].str.contains('Southern Kings|Cheetahs|Glasgow'))]
 
+#games4=games4[(games4['Attendance']<30000)]
 savedfile=games4.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/For Exploration.csv', index=False)
 games5=games4.drop(columns=['Season','Date'])
 savedfile=games5.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Data for Model.csv', index=False)
@@ -807,6 +835,48 @@ savedfile=games5.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Techn
 from matplotlib import pyplot as plt
 plt.hist(games5['Attendance'],histtype='bar')
 
-
-
-
+#games5.columns
+#games5.info()
+#
+#games6=games5
+#games6['NAttendance'] = (games6['Attendance'] - games6['Attendance'].min()) / (games6['Attendance'].max() - games6['Attendance'].min())
+#games6['NRound'] = (games6['Round'] - games6['Round'].min()) / (games6['Round'].max() - games6['Round'].min())
+#games6['NHome Table Position'] = (games6['Home Table Position'] - games6['Home Table Position'].min()) / (games6['Home Table Position'].max() - games6['Home Table Position'].min())
+#games6['NAway Table Position'] = (games6['Away Table Position'] - games6['Away Table Position'].min()) / (games6['Away Table Position'].max() - games6['Away Table Position'].min())
+#games6['NHome Last_5_W/L'] = (games6['Home Last_5_W/L'] - games6['Home Last_5_W/L'].min()) / (games6['Home Last_5_W/L'].max() - games6['Home Last_5_W/L'].min())
+#games6['NLastGame'] = (games6['LastGame'] - games6['LastGame'].min()) / (games6['LastGame'].max() - games6['LastGame'].min())
+#games6['NAway Last_5_W/L'] = (games6['Away Last_5_W/L'] - games6['Away Last_5_W/L'].min()) / (games6['Away Last_5_W/L'].max() - games6['Away Last_5_W/L'].min())
+#games6['NMax Temperature'] = (games6['Max Temperature'] - games6['Max Temperature'].min()) / (games6['Max Temperature'].max() - games6['Max Temperature'].min())
+#games6['NRain Level'] = (games6['Rain Level'] - games6['Rain Level'].min()) / (games6['Rain Level'].max() - games6['Rain Level'].min())
+#games6['NWind Speed'] = (games6['Wind Speed'] - games6['Wind Speed'].min()) / (games6['Wind Speed'].max() - games6['Wind Speed'].min())
+#games6['NLast Game in Comp'] = (games6['Last Game in Comp'] - games6['Last Game in Comp'].min()) / (games6['Last Game in Comp'].max() - games6['Last Game in Comp'].min())
+#games6['NHome Win/Loss in Comp'] = (games6['Home Win/Loss in Comp'] - games6['Home Win/Loss in Comp'].min()) / (games6['Home Win/Loss in Comp'].max() - games6['Home Win/Loss in Comp'].min())
+#games6['NAway Win/Loss in Comp'] = (games6['Away Win/Loss in Comp'] - games6['Away Win/Loss in Comp'].min()) / (games6['Away Win/Loss in Comp'].max() - games6['Away Win/Loss in Comp'].min())
+#games6['NDay Of Week'] = (games6['Day Of Week'] - games6['Day Of Week'].min()) / (games6['Day Of Week'].max() - games6['Day Of Week'].min())
+#games6['NMonth of Year'] = (games6['Month of Year'] - games6['Month of Year'].min()) / (games6['Month of Year'].max() - games6['Month of Year'].min())
+#games6['NHome Winning Percentage'] = (games6['Home Winning Percentage'] - games6['Home Winning Percentage'].min()) / (games6['Home Winning Percentage'].max() - games6['Home Winning Percentage'].min())
+#games6['NhomeVSaway Winning Percentage'] = (games6['homeVSaway Winning Percentage'] - games6['homeVSaway Winning Percentage'].min()) / (games6['homeVSaway Winning Percentage'].max() - games6['homeVSaway Winning Percentage'].min())
+#games6['NNumber ofP14 Wins'] = (games6['Number ofP14 Wins'] - games6['Number ofP14 Wins'].min()) / (games6['Number ofP14 Wins'].max() - games6['Number ofP14 Wins'].min())
+#games6['NNumber ofEPCR Wins'] = (games6['Number ofEPCR Wins'] - games6['Number ofEPCR Wins'].min()) / (games6['Number ofEPCR Wins'].max() - games6['Number ofEPCR Wins'].min())
+#games6['NYears sinceP14 Win'] = (games6['Years sinceP14 Win'] - games6['Years sinceP14 Win'].min()) / (games6['Years sinceP14 Win'].max() - games6['Years sinceP14 Win'].min())
+#games6['NYears sinceEPCR Win'] = (games6['Years sinceEPCR Win'] - games6['Years sinceEPCR Win'].min()) / (games6['Years sinceEPCR Win'].max() - games6['Years sinceEPCR Win'].min())
+#games6['NStadium Age'] = (games6['Stadium Age'] - games6['Stadium Age'].min()) / (games6['Stadium Age'].max() - games6['Stadium Age'].min())
+#games6['NTable Difference'] = (games6['Table Difference'] - games6['Table Difference'].min()) / (games6['Table Difference'].max() - games6['Table Difference'].min())
+#games6['NUncertainty'] = (games6['Uncertainty'] - games6['Uncertainty'].min()) / (games6['Uncertainty'].max() - games6['Uncertainty'].min())
+#
+#games6=games6[['Tournament', 'NRound', 'Home Team', 'Away Team', 'Venue', 'NAttendance',\
+#               'NHome Table Position', 'NAway Table Position', 'NHome Last_5_W/L',\
+#               'NLastGame', 'NAway Last_5_W/L', 'NMax Temperature', 'NRain Level',\
+#               'NWind Speed', 'NLast Game in Comp', 'NHome Win/Loss in Comp',\
+#               'NAway Win/Loss in Comp', 'NDay Of Week', 'NMonth of Year',\
+#               'NHome Winning Percentage', 'Derby',\
+#               'NhomeVSaway Winning Percentage', 'NNumber ofP14 Wins',\
+#               'NNumber ofEPCR Wins', 'NYears sinceP14 Win', 'NYears sinceEPCR Win',\
+#               'NStadium Age', 'NTable Difference', 'Game Competitiveness',\
+#               'NUncertainty', 'Temperature', 'Wind', 'Rain']]
+#
+#savedfile=games6.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/NData for Model.csv', index=False)
+#
+#munster=games6[(games6['Home Team'].str.contains('Munster'))]
+#munster=munster.drop(columns=['Home Team'])
+#savedfile=munster.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/MunsterData for Model.csv', index=False)

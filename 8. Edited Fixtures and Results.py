@@ -308,8 +308,9 @@ for i in away_teams:
 games4=pd.concat(df1)
 
 games4.info()
-
+gamesb=games4
 games4=games4[(games4['Home Team'].str.contains('Benetton Rugby|Benetton Treviso|Cardiff Blues|Connacht Rugby|Dragons|Edinburgh Rugby|Glasgow Warriors|Leinster Rugby|Munster Rugby|Newport Gwent Dragons|Ospreys|Scarlets|Southern Kings|Ulster Rugby|Zebre Rugby|Zebre Rugby Club'))]
+games4a=gamesb[(gamesb['Home Team'].str.contains('Cheetahs'))]
 games4['Round']=games4['Round'].astype(int)
 games4.loc[((games4['Round']>6)&(games4['Tournament'].str.contains('Champions Cup|Challenge Cup'))),'Pool Stage']='Knock Out'
 games4.loc[((games4['Round']<7)&(games4['Tournament'].str.contains('Champions Cup|Challenge Cup'))),'Pool Stage']='Pool'
@@ -325,6 +326,22 @@ games5['Attendance'] = games5['Attendance'].astype(int)
 games5['Date'] = games5['Date'].map(lambda x: x.strftime('%Y-%m-%d'))
 df=pd.pivot_table(games5, index='Venue', values = None).reset_index()
 stadium=list(df['Venue'])
+
+games4a['Round']=games4a['Round'].astype(int)
+games4a.loc[((games4a['Round']>6)&(games4a['Tournament'].str.contains('Champions Cup|Challenge Cup'))),'Pool Stage']='Knock Out'
+games4a.loc[((games4a['Round']<7)&(games4a['Tournament'].str.contains('Champions Cup|Challenge Cup'))),'Pool Stage']='Pool'
+games4a.loc[((games4a['Round']>21)&(games4a['Tournament'].str.contains('League'))&(games4a['Season'].str.contains('2018/2019 Season|2017/2018 Season'))),'Pool Stage']='Knock Out'
+games4a.loc[((games4a['Round']<22)&(games4a['Tournament'].str.contains('League'))&(games4a['Season'].str.contains('2018/2019 Season|2017/2018 Season'))),'Pool Stage']='Pool'
+games4a.loc[((games4a['Round']>22)&(games4a['Tournament'].str.contains('League'))&(games4a['Season'].str.contains('2015/2016 Season|2016/2017 Season'))),'Pool Stage']='Knock Out'
+games4a.loc[((games4a['Round']<23)&(games4a['Tournament'].str.contains('League'))&(games4a['Season'].str.contains('2015/2016 Season|2016/2017 Season'))),'Pool Stage']='Pool'
+games5a=games4a[(games4a['Pool Stage'].str.contains('Pool'))]
+games5a=games5a[(games5a['Attendance'].notnull())]       
+games5a['Attendance'] = games5a['Attendance'].map(lambda x: x.lstrip('Att: '))
+games5a['Attendance'] = games5a['Attendance'].map(lambda x: x.replace(',',''))
+games5a['Attendance'] = games5a['Attendance'].astype(int)
+games5a['Date'] = games5a['Date'].map(lambda x: x.strftime('%Y-%m-%d'))
+dfa=pd.pivot_table(games5a, index='Venue', values = None).reset_index()
+stadiumb=list(dfa['Venue'])
 
 def seturl(row):
     if row['Venue']=='AVIVA Stadium':
@@ -406,18 +423,15 @@ def seturl(row):
     else:
         x=np.nan
     return x
+games5a['Stadium URL']=games5a.apply(lambda row:seturl(row), axis=1) 
+check=games5a[(games5a['Stadium URL'].isnull())]
+
+savedfile=games5a.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Feature Creation1b.csv', index=False) 
+
+
     
 games5['Stadium URL']=games5.apply(lambda row:seturl(row), axis=1) 
 check=games5[(games5['Stadium URL'].isnull())]
 
 savedfile=games5.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Feature Creation1.csv', index=False) 
 
-def test(row):
-    if row['Tournament']=='League':
-        x='Test 1'
-    if row['Tournament']=='League':
-        y='Test 2'
-    return x,y
-    
-games5['test']=games5.apply(lambda row:test(row), axis=1) 
-    
