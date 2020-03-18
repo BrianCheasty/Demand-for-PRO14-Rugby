@@ -196,7 +196,7 @@ for i in home_teams:
         df3.loc[((df3['Away Team'].str.contains(i))&(df3['Away Win/loss/draw'].str.contains('Win'))),'Win']=1
         df3['Win']=df3['Win'].fillna(0)
         df3=df3.sort_values(by=['Date'])
-        df3['Last_5_W/L']=df3['Win'].rolling(5).sum()
+        df3['Last_5_W/L']=df3['Win'].rolling(3).sum() #5 Also
         df3.loc[(df3['Home Team']==(i)),'Home Last_5_W/L_EPCR']=df3['Last_5_W/L']
         df3['Home Last_5_W/L_EPCR']=df3['Home Last_5_W/L_EPCR'].fillna(999)
         df4=df3[(df3['Home Team']==(i))]
@@ -217,7 +217,7 @@ for i in away_teams:
         df3.loc[((df3['Away Team'].str.contains(i))&(df3['Away Win/loss/draw'].str.contains('Win'))),'Win']=1
         df3['Win']=df3['Win'].fillna(0)
         df3=df3.sort_values(by=['Date'])
-        df3['Last_5_W/L']=df3['Win'].rolling(5).sum()
+        df3['Last_5_W/L']=df3['Win'].rolling(3).sum() #5 Also
         df3.loc[(df3['Away Team']==(i)),'Away Last_5_W/L_EPCR']=df3['Last_5_W/L']
         df3['Away Last_5_W/L_EPCR']=df3['Away Last_5_W/L_EPCR'].fillna(999)
         df4=df3[(df3['Away Team']==(i))]
@@ -235,7 +235,7 @@ for i in home_teams:
         df3.loc[((df3['Away Team'].str.contains(i))&(df3['Away Win/loss/draw'].str.contains('Win'))),'Win']=1
         df3['Win']=df3['Win'].fillna(0)
         df3=df3.sort_values(by=['Date'])
-        df3['Last_5_W/L']=df3['Win'].rolling(5).sum()
+        df3['Last_5_W/L']=df3['Win'].rolling(3).sum() #5 Also
         df3.loc[(df3['Home Team']==(i)),'Home Last_5_W/L_P14']=df3['Last_5_W/L']
         df3['Home Last_5_W/L_P14']=df3['Home Last_5_W/L_P14'].fillna(999)
         df4=df3[(df3['Home Team']==(i))]
@@ -256,7 +256,7 @@ for i in away_teams:
         df3.loc[((df3['Away Team'].str.contains(i))&(df3['Away Win/loss/draw'].str.contains('Win'))),'Win']=1
         df3['Win']=df3['Win'].fillna(0)
         df3=df3.sort_values(by=['Date'])
-        df3['Last_5_W/L']=df3['Win'].rolling(5).sum()
+        df3['Last_5_W/L']=df3['Win'].rolling(3).sum() #5 Also
         df3.loc[(df3['Away Team']==(i)),'Away Last_5_W/L_P14']=df3['Last_5_W/L']
         df3['Away Last_5_W/L_P14']=df3['Away Last_5_W/L_P14'].fillna(999)
         df4=df3[(df3['Away Team']==(i))]
@@ -276,7 +276,7 @@ for i in home_teams:
         df3.loc[((df3['Away Team'].str.contains(i))&(df3['Away Win/loss/draw'].str.contains('Win'))),'Win']=1
         df3['Win']=df3['Win'].fillna(0)
         df3=df3.sort_values(by=['Date'])
-        df3['Last_5_W/L']=df3['Win'].shift(1).rolling(5).sum()
+        df3['Last_5_W/L']=df3['Win'].shift(1).rolling(3).sum() #5 Also
         df3.loc[(df3['Home Team']==(i)),'Home Last_5_W/L']=df3['Last_5_W/L']
         df3['Home Last_5_W/L']=df3['Home Last_5_W/L'].fillna(999)
         df4=df3[(df3['Home Team']==(i))]
@@ -297,7 +297,7 @@ for i in away_teams:
         df3.loc[((df3['Away Team'].str.contains(i))&(df3['Away Win/loss/draw'].str.contains('Win'))),'Win']=1
         df3['Win']=df3['Win'].fillna(0)
         df3=df3.sort_values(by=['Date'])
-        df3['Last_5_W/L']=df3['Win'].shift(1).rolling(5).sum()
+        df3['Last_5_W/L']=df3['Win'].shift(1).rolling(3).sum() #5 Also
         df3.loc[(df3['Away Team']==(i)),'Away Last_5_W/L']=df3['Last_5_W/L']
         df3['Away Last_5_W/L']=df3['Away Last_5_W/L'].fillna(999)
         df4=df3[(df3['Away Team']==(i))]
@@ -307,8 +307,30 @@ for i in away_teams:
         continue
 games4=pd.concat(df1)
 
+gamesThree=games4[['Date','Home Team','Home Last_5_W/L']]
+gamesThree=gamesThree.rename(columns={'Home Last_5_W/L':'Home Last_3_W/L'})
+gamesThree.columns
+savedfile=gamesThree.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Three Game Wins.csv', index=False) 
+
+
+
 games4.info()
 gamesb=games4
+awaygames=games4[(~games4['Home Team'].str.contains('Benetton Rugby|Benetton Treviso|Cardiff Blues|Connacht Rugby|Dragons|Edinburgh Rugby|Glasgow Warriors|Leinster Rugby|Munster Rugby|Newport Gwent Dragons|Ospreys|Scarlets|Southern Kings|Ulster Rugby|Zebre Rugby|Zebre Rugby Club'))]
+awaygames=awaygames[(awaygames['Away Team'].str.contains('Benetton Rugby|Benetton Treviso|Cardiff Blues|Connacht Rugby|Dragons|Edinburgh Rugby|Glasgow Warriors|Leinster Rugby|Munster Rugby|Newport Gwent Dragons|Ospreys|Scarlets|Southern Kings|Ulster Rugby|Zebre Rugby|Zebre Rugby Club'))]
+awaygames=awaygames[(awaygames['Tournament'].str.contains('Champions|Challenge'))]
+awaygames=awaygames[(awaygames['Pool Stage'].str.contains('Pool'))]
+awaygames=awaygames[(awaygames['Attendance'].notnull())]       
+awaygames['Attendance'] = awaygames['Attendance'].map(lambda x: x.lstrip('Att: '))
+awaygames['Attendance'] = awaygames['Attendance'].map(lambda x: x.replace(',',''))
+awaygames['Attendance'] = awaygames['Attendance'].astype(int)
+awaygames['Date'] = awaygames['Date'].map(lambda x: x.strftime('%Y-%m-%d'))
+awaygames['Stadium URL']='None'
+savedfile=awaygames.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Missed Away Games.csv', index=False) 
+
+
+
+
 games4=games4[(games4['Home Team'].str.contains('Benetton Rugby|Benetton Treviso|Cardiff Blues|Connacht Rugby|Dragons|Edinburgh Rugby|Glasgow Warriors|Leinster Rugby|Munster Rugby|Newport Gwent Dragons|Ospreys|Scarlets|Southern Kings|Ulster Rugby|Zebre Rugby|Zebre Rugby Club'))]
 games4a=gamesb[(gamesb['Home Team'].str.contains('Cheetahs'))]
 games4['Round']=games4['Round'].astype(int)
@@ -327,21 +349,21 @@ games5['Date'] = games5['Date'].map(lambda x: x.strftime('%Y-%m-%d'))
 df=pd.pivot_table(games5, index='Venue', values = None).reset_index()
 stadium=list(df['Venue'])
 
-games4a['Round']=games4a['Round'].astype(int)
-games4a.loc[((games4a['Round']>6)&(games4a['Tournament'].str.contains('Champions Cup|Challenge Cup'))),'Pool Stage']='Knock Out'
-games4a.loc[((games4a['Round']<7)&(games4a['Tournament'].str.contains('Champions Cup|Challenge Cup'))),'Pool Stage']='Pool'
-games4a.loc[((games4a['Round']>21)&(games4a['Tournament'].str.contains('League'))&(games4a['Season'].str.contains('2018/2019 Season|2017/2018 Season'))),'Pool Stage']='Knock Out'
-games4a.loc[((games4a['Round']<22)&(games4a['Tournament'].str.contains('League'))&(games4a['Season'].str.contains('2018/2019 Season|2017/2018 Season'))),'Pool Stage']='Pool'
-games4a.loc[((games4a['Round']>22)&(games4a['Tournament'].str.contains('League'))&(games4a['Season'].str.contains('2015/2016 Season|2016/2017 Season'))),'Pool Stage']='Knock Out'
-games4a.loc[((games4a['Round']<23)&(games4a['Tournament'].str.contains('League'))&(games4a['Season'].str.contains('2015/2016 Season|2016/2017 Season'))),'Pool Stage']='Pool'
-games5a=games4a[(games4a['Pool Stage'].str.contains('Pool'))]
-games5a=games5a[(games5a['Attendance'].notnull())]       
-games5a['Attendance'] = games5a['Attendance'].map(lambda x: x.lstrip('Att: '))
-games5a['Attendance'] = games5a['Attendance'].map(lambda x: x.replace(',',''))
-games5a['Attendance'] = games5a['Attendance'].astype(int)
-games5a['Date'] = games5a['Date'].map(lambda x: x.strftime('%Y-%m-%d'))
-dfa=pd.pivot_table(games5a, index='Venue', values = None).reset_index()
-stadiumb=list(dfa['Venue'])
+#games4a['Round']=games4a['Round'].astype(int)
+#games4a.loc[((games4a['Round']>6)&(games4a['Tournament'].str.contains('Champions Cup|Challenge Cup'))),'Pool Stage']='Knock Out'
+#games4a.loc[((games4a['Round']<7)&(games4a['Tournament'].str.contains('Champions Cup|Challenge Cup'))),'Pool Stage']='Pool'
+#games4a.loc[((games4a['Round']>21)&(games4a['Tournament'].str.contains('League'))&(games4a['Season'].str.contains('2018/2019 Season|2017/2018 Season'))),'Pool Stage']='Knock Out'
+#games4a.loc[((games4a['Round']<22)&(games4a['Tournament'].str.contains('League'))&(games4a['Season'].str.contains('2018/2019 Season|2017/2018 Season'))),'Pool Stage']='Pool'
+#games4a.loc[((games4a['Round']>22)&(games4a['Tournament'].str.contains('League'))&(games4a['Season'].str.contains('2015/2016 Season|2016/2017 Season'))),'Pool Stage']='Knock Out'
+#games4a.loc[((games4a['Round']<23)&(games4a['Tournament'].str.contains('League'))&(games4a['Season'].str.contains('2015/2016 Season|2016/2017 Season'))),'Pool Stage']='Pool'
+#games5a=games4a[(games4a['Pool Stage'].str.contains('Pool'))]
+#games5a=games5a[(games5a['Attendance'].notnull())]       
+#games5a['Attendance'] = games5a['Attendance'].map(lambda x: x.lstrip('Att: '))
+#games5a['Attendance'] = games5a['Attendance'].map(lambda x: x.replace(',',''))
+#games5a['Attendance'] = games5a['Attendance'].astype(int)
+#games5a['Date'] = games5a['Date'].map(lambda x: x.strftime('%Y-%m-%d'))
+#dfa=pd.pivot_table(games5a, index='Venue', values = None).reset_index()
+#stadiumb=list(dfa['Venue'])
 
 def seturl(row):
     if row['Venue']=='AVIVA Stadium':

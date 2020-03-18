@@ -3,9 +3,85 @@ import numpy as np
 
 gamesa=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Feature Creation2.csv',encoding='latin-1')
 gamesb=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Feature Creation2b.csv',encoding='latin-1')
-games=gamesa.append(gamesb)
-games=games.reset_index()
-games=games.drop(columns=['index'])
+missedaway=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Missed Away Games.csv',encoding='latin-1')
+bettingodds=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Betting Odds.csv',encoding='latin-1')
+threeWins=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Three Game Wins.csv',encoding='latin-1')
+sentiment=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Consumer Sentiment.csv',encoding='latin-1')
+sentiment['Date']=pd.to_datetime(sentiment['Date'],format='%d/%m/%Y')
+
+threeWins.columns
+bettingodds['Date']=pd.to_datetime(bettingodds['Date'],format='%d/%m/%Y')
+missedaway=missedaway.drop(columns=['Pool Stage','Stadium URL'])
+missedaway['Max Temperature']=np.nan
+missedaway['Rain Level']=np.nan
+missedaway['Wind Speed']=np.nan
+
+
+game=gamesa.append([gamesb,missedaway])
+game=game.reset_index()
+game=game.drop(columns=['index'])
+game['Date']=pd.to_datetime(game['Date'],format='%Y-%m-%d')
+threeWins['Date']=pd.to_datetime(threeWins['Date'],format='%Y-%m-%d')
+bettingodds['Home Team']=bettingodds['Home Team'].str.strip()
+bteam=list(bettingodds['Home Team'].drop_duplicates())
+gameteam=list(game['Home Team'].drop_duplicates())
+
+bettingodds.loc[bettingodds['Home Team'].str.contains('Ospreys'),'Home Team']='Ospreys'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Dragons'),'Home Team']='Dragons'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Edinburgh'),'Home Team']='Edinburgh Rugby'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Zebre'),'Home Team']='Zebre Rugby'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Benetton'),'Home Team']='Benetton Treviso'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Leinster'),'Home Team']='Leinster Rugby'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Cardiff'),'Home Team']='Cardiff Blues'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Scarlets'),'Home Team']='Scarlets'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Munster'),'Home Team']='Munster Rugby'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Ulster'),'Home Team']='Ulster Rugby'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Connacht'),'Home Team']='Connacht Rugby'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Glasgow'),'Home Team']='Glasgow Warriors'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Kings'),'Home Team']='Southern Kings'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Cheetahs'),'Home Team']='Toyota Cheetahs'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Francais'),'Home Team']='Stade Francais Paris'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Leicester'),'Home Team']='Leicester Tigers'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Gloucester'),'Home Team']='Gloucester Rugby'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Bayonne'),'Home Team']='Bayonne'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Rochelle'),'Home Team']='La Rochelle'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Bath'),'Home Team']='Bath Rugby'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Agen'),'Home Team']='Agen'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Harlequins'),'Home Team']='Harlequins'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Grenoble'),'Home Team']='Grenoble'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Calvisano'),'Home Team']='Rugby Calvisano'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Montpellier'),'Home Team']='Montpellier'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Bristol'),'Home Team']='Bristol Rugby'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Pau'),'Home Team']='Pau'
+#bettingodds.loc[bettingodds['Home Team'].str.contains('RC Toulonnai'),'Home Team']='Toulouse'
+#bettingodds.loc[bettingodds['Home Team'].str.contains('Toulon'),'Home Team']='RC Toulon'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Sale'),'Home Team']='Sale Sharks'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Lyon'),'Home Team']='Lyon'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Saracens'),'Home Team']='Saracens'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Enisei|Enisey'),'Home Team']='Enisei-STM'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Newcastle'),'Home Team']='Newcastle Falcons'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Brive'),'Home Team']='Brive'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Wasps'),'Home Team']='Wasps'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Oyonnax'),'Home Team']='Oyonnax'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Worcester'),'Home Team']='Worcester Warriors'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Perpignan'),'Home Team']='Perpignan'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Bordeaux'),'Home Team']='Bordeaux-Begles'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Castres'),'Home Team']='Castres Olympique'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Northampton'),'Home Team']='Northampton Saints'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Clermont'),'Home Team']='ASM Clermont Auvergne'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Irish'),'Home Team']='London Irish'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Timisoara'),'Home Team']='Timisoara Saracens'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Krasny'),'Home Team']='Krasny Yar'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Racing'),'Home Team']='Racing 92'
+bettingodds.loc[bettingodds['Home Team'].str.contains('Exeter'),'Home Team']='Exeter Chiefs'
+
+
+bteam=list(bettingodds['Home Team'].drop_duplicates())
+games=pd.merge(game,bettingodds, on=['Date','Home Team'], how='left')
+games=pd.merge(games,threeWins, on=['Date','Home Team'], how='left')
+games=games.drop(columns=['Away Team_y'])
+games=games.rename(columns={'Away Team_x':'Away Team'})
+check=game[(games['Home Win'].isnull())]
 #games=games[(games['Home Team']!=('Southern Kings'))]
 #games=games[(games['Away Team']!=('Southern Kings'))]
 games['Last_EPCR']=games['Last_EPCR'].fillna(0)
@@ -26,7 +102,11 @@ games=games.drop(columns=['Away Last_5_W/L_P14','Away Last_5_W/L_EPCR','Ref','Ho
                           'Home Total Tackles Made','Away Total Tackles Made','Home Total Turnovers Won','Away Total Turnovers Won',\
                           'Home Total Penalties Conceded','Away Total Penalties Conceded'])
 games['Played']=games['Played'].fillna(games['Home Wins']+games['Away Wins']+games['Draws'])
-
+games['Played']=games['Played'].fillna(0)
+games['Home Wins']=games['Home Wins'].fillna(0)
+games['Away Wins']=games['Away Wins'].fillna(0)
+games['Draws']=games['Draws'].fillna(0)
+games.info()
 teams=list(games['Home Team'].drop_duplicates())
 season=list(games['Season'].drop_duplicates())
 rounds=list(games['Round'].drop_duplicates())
@@ -72,6 +152,7 @@ for i in teams:
     for j in season:
         df2=df1[(df1['Season'].str.contains(j))]
         if len(df2)==0:
+            print(i +' is length 0 in '+j)
             continue
         else:
             df2=df2.sort_values(by=['Date'])
@@ -84,16 +165,19 @@ for i in teams:
     df4=pd.concat(df)
     gamesA.append(df4)
 gamesB=pd.concat(gamesA) 
+gamesB['Home Total Points']=gamesB['Home Total Points'].fillna(0)
+gamesB['Total Points Avail TD']=gamesB['Total Points Avail TD'].fillna(0)
+gamesB.info()
 
-
-
-gamesB['Date']=pd.to_datetime(gamesB['Date'])
+#gamesB['Date']=pd.to_datetime(gamesB['Date'])
 gamesB['Day Of Week']=gamesB['Date'].dt.dayofweek
 gamesB['Month of Year']=gamesB['Date'].dt.month
 
 checktime=pd.pivot_table(gamesB,index='Kick Off', columns='Home Team', values='Date',aggfunc='count')
 
+gamesB['Kick Off']=gamesB['Kick Off'].fillna(gamesB['Time'])
 gamesB['Kick Off']=gamesB['Kick Off'].fillna('16:00:00')
+gamesB.info()
 def time(row):
     ko=row['Kick Off'].split(':')
     ko2=int(ko[0])
@@ -106,6 +190,7 @@ def time(row):
             x='Evening'
     return x
 gamesB['Kick Off Hour']=gamesB.apply(lambda row:time(row), axis=1) 
+gamesB.info()
 
 gamesB['Home Winning Percentage']=round(gamesB['Home Total Points']/gamesB['Total Points Avail TD'],2)
 gamesB['Home Winning Percentage']=gamesB['Home Winning Percentage'].fillna(0)
@@ -479,14 +564,17 @@ gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Venue'].str.co
 gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Venue'].str.contains('Principality'))),'Stadium Age']=19
 gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Venue'].str.contains('Principality'))),'Stadium Age']=18
 gamesB.loc[(gamesB['Venue'].str.contains('Principality')),'Stadium Capacity']=74500
+gamesB.info()
 
 gamesB['Stadium Percentage']=round(gamesB['Attendance']/gamesB['Stadium Capacity'],2)
 check=gamesB[(gamesB['Stadium Percentage']>0.99)]
 gamesB=gamesB.rename(columns={'Home Table Pos':'Home Table Position','Away Table Pos':'Away Table Position'})
 league=gamesB[(gamesB['Tournament'].str.contains('League'))]
+league.info()
 cup=gamesB[(gamesB['Tournament'].str.contains('Cup'))]
+cup.info()
 
-
+#   percentage
 league.loc[((league['Home Team'].str.contains('Munster'))&league['Home Table Position'].isnull()),'Home Table Position']=2
 league.loc[((league['Away Team'].str.contains('Munster'))&league['Away Table Position'].isnull()),'Home Table Position']=2
 league.loc[((league['Home Team'].str.contains('Glasgow'))&league['Home Table Position'].isnull()),'Home Table Position']=1
@@ -565,7 +653,7 @@ cup.loc[((cup['Away Team'].str.contains('Gloucester'))&cup['Away Table Position'
 cup.loc[((cup['Away Team'].str.contains('Oyonnax'))&cup['Away Table Position'].isnull()),'Home Table Position']=2
 cup.loc[((cup['Away Team'].str.contains('Brive'))&cup['Away Table Position'].isnull()),'Home Table Position']=4
 
-
+cup.info()
 check=league[(league['Home Table Position'].isnull())]
 league.loc[league['Season'].str.contains('2015/2016 Season|2016/2017 Season'),'Table Difference']=(league['Home Table Position']-league['Away Table Position'])
 league.loc[league['Season'].str.contains('2017/2018 Season|2018/2019 Season'),'Table Difference']=(((league['Home Table Position']-league['Away Table Position'])+1)*2)
@@ -589,6 +677,8 @@ cup.loc[cup['Away Table Position']==2,'Table Marker']=2
 league.loc[league['Season'].str.contains('2015/2016|2016/2017'),'Points Left']=(23-league['Round'])*5
 league.loc[league['Season'].str.contains('2017/2018|2018/2019'),'Points Left']=(22-league['Round'])*5
 cup['Points Left']=(7-cup['Round'])*5
+league.info()
+cup.info()
 def competitveness1517(row,d):
     if (row['Home Total Points']+row['Points Left'])< d:
         z='Cant Qualify'
@@ -655,6 +745,7 @@ for i in season22:
         dflist.append(df2)
     dfconcat=pd.concat(dflist)
     league2.append(dfconcat)
+
     
 season22=['2017/2018 Season','2018/2019 Season']
 round22=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21]
@@ -713,7 +804,7 @@ for i in season:
     cup2.append(dfconcat)
 cup3=pd.concat(cup2)
 games2=league3.append(cup3)        
- 
+games2.info() 
 check=games2[(games2['Game Competitiveness'].str.contains('Check Problem'))]
 
 games2.loc[((games2['Tournament'].str.contains('Champions|Challenge'))&(games2['Last Game in Comp']==999)),'Last Game in Comp']=240
@@ -729,11 +820,18 @@ for i in teams:
     df.loc[((df['Tournament'].str.contains('Champions|Challenge'))&(df['LastGame']==999)),'LastGame']=df['Days']
     games3.append(df)
 games4=pd.concat(games3)
+games4.info()
 
+
+
+
+games4.loc[(games4['Home Last_3_W/L']==999),'Home Last_3_W/L']=np.nan
 games4.loc[(games4['Home Last_5_W/L']==999),'Home Last_5_W/L']=np.nan
 games4.loc[(games4['Away Last_5_W/L']==999),'Away Last_5_W/L']=np.nan
 games4.loc[(games4['Home Win/Loss in Comp']==999),'Home Win/Loss in Comp']=np.nan
 games4.loc[(games4['Away Win/Loss in Comp']==999),'Away Win/Loss in Comp']=np.nan
+games4=games4[(games4['Home Team'].str.contains('Ospreys|Dragons|Edinburgh Rugby|Zebre Rugby|Benetton Treviso|Leinster Rugby|Cardiff Blues|Scarlets|Munster Rugby|Ulster Rugby|Connacht Rugby|Glasgow Warriors|Southern Kings|Toyota Cheetahs'))]
+teams=list(games4['Home Team'].drop_duplicates())
 
 averages=[]
 for i in teams:
@@ -743,6 +841,15 @@ for i in teams:
 for i in averages:
     for j,i in i.items():
         games4.loc[((games4['Home Team'].str.contains(j))&(games4['Home Last_5_W/L'].isnull())),'Home Last_5_W/L']=i
+
+averages=[]
+for i in teams:
+    df=games4[(games4['Home Team'].str.contains(i))]
+    average=round(df['Home Last_3_W/L'].mean(skipna=True))
+    averages.append({i:average})
+for i in averages:
+    for j,i in i.items():
+        games4.loc[((games4['Home Team'].str.contains(j))&(games4['Home Last_3_W/L'].isnull())),'Home Last_3_W/L']=i
         
 averages=[]
 for i in teams:
@@ -825,58 +932,50 @@ def raindummy(row):
     return x
 
 games4['Rain']=games4.apply(lambda row: raindummy(row), axis=1)
+
 games4=games4[(~games['Home Team'].str.contains('Southern Kings|Cheetahs|Glasgow'))]
+games4=games4[(~games['Away Team'].str.contains('Southern Kings|Cheetahs'))]
+games5=pd.merge(games4,sentiment, on=['Date','Home Team'], how='left')
+def stadiumage(row):
+    if row['Stadium Age'] < 5:
+        x='New'
+    elif row['Stadium Age']>20:
+        x='Old'
+    else:
+        x='Middle Age'
+    return x
+games5['Age of Stadium']=games5.apply(lambda row: stadiumage(row), axis=1)
+games5=games5[(games5['Odds1'].notnull())]
+def probability(row):
+    odds=row['Odds1'].split(':')
+    homeodd=int(odds[0])
+    awayodd=int(odds[1])
+    if (homeodd > 0)&(awayodd > 0):
+        home=homeodd/awayodd
+        both=home+1
+        prob=1/both
+    elif(homeodd == 0)&(awayodd > 0):
+        home=1/awayodd
+        both=home+1
+        prob=1/both
+    elif(homeodd > 0)&(awayodd == 0):
+        home=homeodd
+        both=home+1
+        prob=1/both
+    return prob
+    
+games5['Win Probability']=games5.apply(lambda row:probability(row), axis=1)
+def uncertaintydummy(row):
+    if row['Win Probability'] >= 0.6 or row['Win Probability'] <= 0.4:
+        x='Uneven'
+    else:
+        x='Even'
+    return x
+games5['Win Probability Dummy']=games5.apply(lambda row:uncertaintydummy(row), axis=1)
+games5=games5.drop(columns=['Odds1','Home Win','Draw','Away Win','Odds6'])       
 
-#games4=games4[(games4['Attendance']<30000)]
-savedfile=games4.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/For Exploration.csv', index=False)
-games5=games4.drop(columns=['Season','Date'])
-savedfile=games5.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Data for Model.csv', index=False)
+savedfile=games5.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/For Exploration.csv', index=False)
+games6=games5.drop(columns=['Season','Date'])
+savedfile=games6.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Data for Model.csv', index=False)
 
-from matplotlib import pyplot as plt
-plt.hist(games5['Attendance'],histtype='bar')
 
-#games5.columns
-#games5.info()
-#
-#games6=games5
-#games6['NAttendance'] = (games6['Attendance'] - games6['Attendance'].min()) / (games6['Attendance'].max() - games6['Attendance'].min())
-#games6['NRound'] = (games6['Round'] - games6['Round'].min()) / (games6['Round'].max() - games6['Round'].min())
-#games6['NHome Table Position'] = (games6['Home Table Position'] - games6['Home Table Position'].min()) / (games6['Home Table Position'].max() - games6['Home Table Position'].min())
-#games6['NAway Table Position'] = (games6['Away Table Position'] - games6['Away Table Position'].min()) / (games6['Away Table Position'].max() - games6['Away Table Position'].min())
-#games6['NHome Last_5_W/L'] = (games6['Home Last_5_W/L'] - games6['Home Last_5_W/L'].min()) / (games6['Home Last_5_W/L'].max() - games6['Home Last_5_W/L'].min())
-#games6['NLastGame'] = (games6['LastGame'] - games6['LastGame'].min()) / (games6['LastGame'].max() - games6['LastGame'].min())
-#games6['NAway Last_5_W/L'] = (games6['Away Last_5_W/L'] - games6['Away Last_5_W/L'].min()) / (games6['Away Last_5_W/L'].max() - games6['Away Last_5_W/L'].min())
-#games6['NMax Temperature'] = (games6['Max Temperature'] - games6['Max Temperature'].min()) / (games6['Max Temperature'].max() - games6['Max Temperature'].min())
-#games6['NRain Level'] = (games6['Rain Level'] - games6['Rain Level'].min()) / (games6['Rain Level'].max() - games6['Rain Level'].min())
-#games6['NWind Speed'] = (games6['Wind Speed'] - games6['Wind Speed'].min()) / (games6['Wind Speed'].max() - games6['Wind Speed'].min())
-#games6['NLast Game in Comp'] = (games6['Last Game in Comp'] - games6['Last Game in Comp'].min()) / (games6['Last Game in Comp'].max() - games6['Last Game in Comp'].min())
-#games6['NHome Win/Loss in Comp'] = (games6['Home Win/Loss in Comp'] - games6['Home Win/Loss in Comp'].min()) / (games6['Home Win/Loss in Comp'].max() - games6['Home Win/Loss in Comp'].min())
-#games6['NAway Win/Loss in Comp'] = (games6['Away Win/Loss in Comp'] - games6['Away Win/Loss in Comp'].min()) / (games6['Away Win/Loss in Comp'].max() - games6['Away Win/Loss in Comp'].min())
-#games6['NDay Of Week'] = (games6['Day Of Week'] - games6['Day Of Week'].min()) / (games6['Day Of Week'].max() - games6['Day Of Week'].min())
-#games6['NMonth of Year'] = (games6['Month of Year'] - games6['Month of Year'].min()) / (games6['Month of Year'].max() - games6['Month of Year'].min())
-#games6['NHome Winning Percentage'] = (games6['Home Winning Percentage'] - games6['Home Winning Percentage'].min()) / (games6['Home Winning Percentage'].max() - games6['Home Winning Percentage'].min())
-#games6['NhomeVSaway Winning Percentage'] = (games6['homeVSaway Winning Percentage'] - games6['homeVSaway Winning Percentage'].min()) / (games6['homeVSaway Winning Percentage'].max() - games6['homeVSaway Winning Percentage'].min())
-#games6['NNumber ofP14 Wins'] = (games6['Number ofP14 Wins'] - games6['Number ofP14 Wins'].min()) / (games6['Number ofP14 Wins'].max() - games6['Number ofP14 Wins'].min())
-#games6['NNumber ofEPCR Wins'] = (games6['Number ofEPCR Wins'] - games6['Number ofEPCR Wins'].min()) / (games6['Number ofEPCR Wins'].max() - games6['Number ofEPCR Wins'].min())
-#games6['NYears sinceP14 Win'] = (games6['Years sinceP14 Win'] - games6['Years sinceP14 Win'].min()) / (games6['Years sinceP14 Win'].max() - games6['Years sinceP14 Win'].min())
-#games6['NYears sinceEPCR Win'] = (games6['Years sinceEPCR Win'] - games6['Years sinceEPCR Win'].min()) / (games6['Years sinceEPCR Win'].max() - games6['Years sinceEPCR Win'].min())
-#games6['NStadium Age'] = (games6['Stadium Age'] - games6['Stadium Age'].min()) / (games6['Stadium Age'].max() - games6['Stadium Age'].min())
-#games6['NTable Difference'] = (games6['Table Difference'] - games6['Table Difference'].min()) / (games6['Table Difference'].max() - games6['Table Difference'].min())
-#games6['NUncertainty'] = (games6['Uncertainty'] - games6['Uncertainty'].min()) / (games6['Uncertainty'].max() - games6['Uncertainty'].min())
-#
-#games6=games6[['Tournament', 'NRound', 'Home Team', 'Away Team', 'Venue', 'NAttendance',\
-#               'NHome Table Position', 'NAway Table Position', 'NHome Last_5_W/L',\
-#               'NLastGame', 'NAway Last_5_W/L', 'NMax Temperature', 'NRain Level',\
-#               'NWind Speed', 'NLast Game in Comp', 'NHome Win/Loss in Comp',\
-#               'NAway Win/Loss in Comp', 'NDay Of Week', 'NMonth of Year',\
-#               'NHome Winning Percentage', 'Derby',\
-#               'NhomeVSaway Winning Percentage', 'NNumber ofP14 Wins',\
-#               'NNumber ofEPCR Wins', 'NYears sinceP14 Win', 'NYears sinceEPCR Win',\
-#               'NStadium Age', 'NTable Difference', 'Game Competitiveness',\
-#               'NUncertainty', 'Temperature', 'Wind', 'Rain']]
-#
-#savedfile=games6.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/NData for Model.csv', index=False)
-#
-#munster=games6[(games6['Home Team'].str.contains('Munster'))]
-#munster=munster.drop(columns=['Home Team'])
-#savedfile=munster.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/MunsterData for Model.csv', index=False)
