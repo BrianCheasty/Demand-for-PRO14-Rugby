@@ -200,6 +200,15 @@ gamesB.loc[((gamesB['Home Team'].str.contains('Edinburgh|Glasgow'))&(gamesB['Awa
 gamesB.loc[((gamesB['Home Team'].str.contains('Kings|Cheetahs'))&(gamesB['Away Team'].str.contains('Kings|Cheetahs'))),'Derby']='Derby'
 gamesB.loc[((gamesB['Home Team'].str.contains('Treviso|Zebre'))&(gamesB['Away Team'].str.contains('Treviso|Zebre'))),'Derby']='Derby'
 gamesB.loc[((gamesB['Home Team'].str.contains('Ospreys|Dragons|Cardiff|Scarlets'))&(gamesB['Away Team'].str.contains('Ospreys|Dragons|Cardiff|Scarlets'))),'Derby']='Derby'
+
+gamesB.loc[((gamesB['Home Team'].str.contains('Munster'))&(gamesB['Away Team'].str.contains('Leinster'))),'Derby']=' Extra Derby'
+gamesB.loc[((gamesB['Home Team'].str.contains('Leinster'))&(gamesB['Away Team'].str.contains('Munster'))),'Derby']='Extra Derby'
+gamesB.loc[((gamesB['Home Team'].str.contains('Connacht'))&(gamesB['Away Team'].str.contains('Leinster'))),'Derby']='Extra Derby'
+gamesB.loc[((gamesB['Home Team'].str.contains('Ulster'))&(gamesB['Away Team'].str.contains('Leinster'))),'Derby']='Extra Derby'
+gamesB.loc[((gamesB['Home Team'].str.contains('Edinburgh'))&(gamesB['Away Team'].str.contains('Glasgow'))),'Derby']='Extra Derby'
+gamesB.loc[((gamesB['Home Team'].str.contains('Cardiff'))&(gamesB['Away Team'].str.contains('Ospreys'))),'Derby']='Extra Derby'
+gamesB.loc[((gamesB['Home Team'].str.contains('Dragons'))&(gamesB['Away Team'].str.contains('Scarlets'))),'Derby']='Extra Derby'
+
 gamesB['Derby']=gamesB['Derby'].fillna('Non Derby')
 gamesB['homeVSaway Winning Percentage']=round(gamesB['Home Wins']/gamesB['Played'],2)
 gamesB['homeVSaway Winning Percentage']=gamesB['homeVSaway Winning Percentage'].fillna(0.5)
@@ -455,7 +464,7 @@ gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Venue'].str.co
 gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Venue'].str.contains('RDS'))),'Stadium Age']=8
 gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Venue'].str.contains('RDS'))),'Stadium Age']=7
 gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Venue'].str.contains('RDS'))),'Stadium Age']=6
-gamesB.loc[(gamesB['Venue'].str.contains('RDS')),'Stadium Capacity']=18500
+gamesB.loc[(gamesB['Venue'].str.contains('RDS')),'Stadium Capacity']=19100
 
 gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Venue'].str.contains('Cardiff'))),'Stadium Age']=20
 gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Venue'].str.contains('Cardiff'))),'Stadium Age']=19
@@ -497,7 +506,7 @@ gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Venue'].str.co
 gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Venue'].str.contains('Thomond'))),'Stadium Age']=9
 gamesB.loc[((gamesB['Season'].str.contains('2016/2017'))&(gamesB['Venue'].str.contains('Thomond'))),'Stadium Age']=8
 gamesB.loc[((gamesB['Season'].str.contains('2015/2016'))&(gamesB['Venue'].str.contains('Thomond'))),'Stadium Age']=7
-gamesB.loc[(gamesB['Venue'].str.contains('Thomond')),'Stadium Capacity']=25600
+gamesB.loc[(gamesB['Venue'].str.contains('Thomond')),'Stadium Capacity']=26267
 
 gamesB.loc[((gamesB['Season'].str.contains('2018/2019'))&(gamesB['Venue'].str.contains('Scotstoun'))),'Stadium Age']=8
 gamesB.loc[((gamesB['Season'].str.contains('2017/2018'))&(gamesB['Venue'].str.contains('Scotstoun'))),'Stadium Age']=7
@@ -832,24 +841,45 @@ games4.loc[(games4['Home Win/Loss in Comp']==999),'Home Win/Loss in Comp']=np.na
 games4.loc[(games4['Away Win/Loss in Comp']==999),'Away Win/Loss in Comp']=np.nan
 games4=games4[(games4['Home Team'].str.contains('Ospreys|Dragons|Edinburgh Rugby|Zebre Rugby|Benetton Treviso|Leinster Rugby|Cardiff Blues|Scarlets|Munster Rugby|Ulster Rugby|Connacht Rugby|Glasgow Warriors|Southern Kings|Toyota Cheetahs'))]
 teams=list(games4['Home Team'].drop_duplicates())
-
+#from scipy.stats import shapiro
 averages=[]
+#import matplotlib.pyplot as plt
+#plt.hist(games4['Home Last_5_W/L'])
 for i in teams:
     df=games4[(games4['Home Team'].str.contains(i))]
+    #stat, p = shapiro(df['Home Last_5_W/L'])
+    #print('Statistics=%.3f, p=%.3f' % (stat, p))
+    #plt.hist(df['Home Last_5_W/L'])
     average=round(df['Home Last_5_W/L'].mean(skipna=True))
+    #print(average)
     averages.append({i:average})
 for i in averages:
     for j,i in i.items():
         games4.loc[((games4['Home Team'].str.contains(j))&(games4['Home Last_5_W/L'].isnull())),'Home Last_5_W/L']=i
+        
+#checkmedian=[]
+#for i in teams:
+#    df=games4[(games4['Home Team'].str.contains(i))]
+#    print(df['Home Last_5_W/L'].median())
+#    median=round(df['Home Last_5_W/L'].median())
+#    checkmedian.append({i:median})
 
 averages=[]
 for i in teams:
     df=games4[(games4['Home Team'].str.contains(i))]
     average=round(df['Home Last_3_W/L'].mean(skipna=True))
+    print(average)
     averages.append({i:average})
 for i in averages:
     for j,i in i.items():
         games4.loc[((games4['Home Team'].str.contains(j))&(games4['Home Last_3_W/L'].isnull())),'Home Last_3_W/L']=i
+        
+#checkmedian=[]
+#for i in teams:
+#    df=games4[(games4['Home Team'].str.contains(i))]
+#    print(df['Home Last_3_W/L'].median())
+#    median=round(df['Home Last_3_W/L'].median())
+#    checkmedian.append({i:median})
         
 averages=[]
 for i in teams:
@@ -879,11 +909,11 @@ for i in averages:
     for j,i in i.items():
         games4.loc[((games4['Away Team'].str.contains(j))&(games4['Away Win/Loss in Comp'].isnull())),'Away Win/Loss in Comp']=i
 games4['Away Win/Loss in Comp']=games4['Away Win/Loss in Comp'].fillna(0) 
-
-games4=games4.drop(columns=['Points Left','Kick Off','Table Marker','Stadium Percentage','Stadium Capacity','Total Points Avail TD','Home Total Points',\
-                          'Home Points','Away Win/loss/draw','Home Win/loss/draw','Home Score','Away Score','Home h2htries','Away h2htries','Home Wins',\
-                          'Away Wins','Draws','Played','Time','Days'])
 games4['Uncertainty']=games4['Home Winning Percentage']*games4['homeVSaway Winning Percentage']
+games4=games4.drop(columns=['Points Left','Kick Off','Table Marker','Total Points Avail TD','Home Total Points',\
+                          'Home Points','Away Win/loss/draw','Home Win/loss/draw','Home Score','Away Score','Home h2htries','Away h2htries','Home Wins',\
+                          'Away Wins','Draws','Played','Time','Days'])  #Removed 'Stadium Capacity',
+
 
 print(games4['Max Temperature'].mean())
 print(games4['Max Temperature'].median())
@@ -975,7 +1005,11 @@ games5['Win Probability Dummy']=games5.apply(lambda row:uncertaintydummy(row), a
 games5=games5.drop(columns=['Odds1','Home Win','Draw','Away Win','Odds6'])       
 
 savedfile=games5.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/For Exploration.csv', index=False)
-games6=games5.drop(columns=['Season','Date'])
+games6=games5.drop(columns=['Season','Date','Stadium Percentage'])
 savedfile=games6.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Data for Model.csv', index=False)
+games5['Stadium Perc']=round(games5['Stadium Percentage']*100,0)
+games7=games5.drop(columns=['Season','Date','Attendance','Stadium Percentage'])
+games7=games7.rename(columns={'Stadium Perc':'Stadium Percentage'})
+savedfile=games7.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Data for Model2.csv', index=False)
 
-
+#derby
