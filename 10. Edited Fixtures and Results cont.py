@@ -201,7 +201,7 @@ gamesB.loc[((gamesB['Home Team'].str.contains('Kings|Cheetahs'))&(gamesB['Away T
 gamesB.loc[((gamesB['Home Team'].str.contains('Treviso|Zebre'))&(gamesB['Away Team'].str.contains('Treviso|Zebre'))),'Derby']='Derby'
 gamesB.loc[((gamesB['Home Team'].str.contains('Ospreys|Dragons|Cardiff|Scarlets'))&(gamesB['Away Team'].str.contains('Ospreys|Dragons|Cardiff|Scarlets'))),'Derby']='Derby'
 
-gamesB.loc[((gamesB['Home Team'].str.contains('Munster'))&(gamesB['Away Team'].str.contains('Leinster'))),'Derby']=' Extra Derby'
+gamesB.loc[((gamesB['Home Team'].str.contains('Munster'))&(gamesB['Away Team'].str.contains('Leinster'))),'Derby']='Extra Derby'
 gamesB.loc[((gamesB['Home Team'].str.contains('Leinster'))&(gamesB['Away Team'].str.contains('Munster'))),'Derby']='Extra Derby'
 gamesB.loc[((gamesB['Home Team'].str.contains('Connacht'))&(gamesB['Away Team'].str.contains('Leinster'))),'Derby']='Extra Derby'
 gamesB.loc[((gamesB['Home Team'].str.contains('Ulster'))&(gamesB['Away Team'].str.contains('Leinster'))),'Derby']='Extra Derby'
@@ -841,6 +841,13 @@ games4.loc[(games4['Home Win/Loss in Comp']==999),'Home Win/Loss in Comp']=np.na
 games4.loc[(games4['Away Win/Loss in Comp']==999),'Away Win/Loss in Comp']=np.nan
 games4=games4[(games4['Home Team'].str.contains('Ospreys|Dragons|Edinburgh Rugby|Zebre Rugby|Benetton Treviso|Leinster Rugby|Cardiff Blues|Scarlets|Munster Rugby|Ulster Rugby|Connacht Rugby|Glasgow Warriors|Southern Kings|Toyota Cheetahs'))]
 teams=list(games4['Home Team'].drop_duplicates())
+awayteams=list(games4['Away Team'].drop_duplicates())
+games4.loc[((games4['Away Team'].str.contains('Munster|Leinster|Connacht|Ulster'))),'Away Country']='Ireland'
+games4.loc[((games4['Away Team'].str.contains('Glasgow|Edinburgh'))),'Away Country']='Scotland'
+games4.loc[((games4['Away Team'].str.contains('Zebre|Treviso'))),'Away Country']='Italy'
+games4.loc[((games4['Away Team'].str.contains('Cardiff|Ospreys|Dragons|Scarlets'))),'Away Country']='Wales'
+games4['Away Country']=games4['Away Country'].fillna('EngFra')
+
 #from scipy.stats import shapiro
 averages=[]
 #import matplotlib.pyplot as plt
@@ -1007,9 +1014,9 @@ games5=games5.drop(columns=['Odds1','Home Win','Draw','Away Win','Odds6'])
 savedfile=games5.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/For Exploration.csv', index=False)
 games6=games5.drop(columns=['Season','Date','Stadium Percentage'])
 savedfile=games6.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Data for Model.csv', index=False)
-games5['Stadium Perc']=round(games5['Stadium Percentage']*100,0)
+games5['Stadium Perc']=games5['Stadium Percentage']*100
 games7=games5.drop(columns=['Season','Date','Attendance','Stadium Percentage'])
 games7=games7.rename(columns={'Stadium Perc':'Stadium Percentage'})
 savedfile=games7.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Data for Model2.csv', index=False)
 
-#derby
+
