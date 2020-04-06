@@ -202,12 +202,10 @@ gamesB.loc[((gamesB['Home Team'].str.contains('Treviso|Zebre'))&(gamesB['Away Te
 gamesB.loc[((gamesB['Home Team'].str.contains('Ospreys|Dragons|Cardiff|Scarlets'))&(gamesB['Away Team'].str.contains('Ospreys|Dragons|Cardiff|Scarlets'))),'Derby']='Derby'
 
 gamesB.loc[((gamesB['Home Team'].str.contains('Munster'))&(gamesB['Away Team'].str.contains('Leinster'))),'Derby']='Extra Derby'
-gamesB.loc[((gamesB['Home Team'].str.contains('Leinster'))&(gamesB['Away Team'].str.contains('Munster'))),'Derby']='Extra Derby'
-gamesB.loc[((gamesB['Home Team'].str.contains('Connacht'))&(gamesB['Away Team'].str.contains('Leinster'))),'Derby']='Extra Derby'
 gamesB.loc[((gamesB['Home Team'].str.contains('Ulster'))&(gamesB['Away Team'].str.contains('Leinster'))),'Derby']='Extra Derby'
+gamesB.loc[((gamesB['Home Team'].str.contains('Ulster'))&(gamesB['Away Team'].str.contains('Munster'))),'Derby']='Extra Derby'
 gamesB.loc[((gamesB['Home Team'].str.contains('Edinburgh'))&(gamesB['Away Team'].str.contains('Glasgow'))),'Derby']='Extra Derby'
-gamesB.loc[((gamesB['Home Team'].str.contains('Cardiff'))&(gamesB['Away Team'].str.contains('Ospreys'))),'Derby']='Extra Derby'
-gamesB.loc[((gamesB['Home Team'].str.contains('Dragons'))&(gamesB['Away Team'].str.contains('Scarlets'))),'Derby']='Extra Derby'
+
 
 gamesB['Derby']=gamesB['Derby'].fillna('Non Derby')
 gamesB['homeVSaway Winning Percentage']=round(gamesB['Home Wins']/gamesB['Played'],2)
