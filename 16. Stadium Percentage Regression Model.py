@@ -52,7 +52,7 @@ validate['err']=validate['Stadium Percentage']-validate['Predicted']
 validate['errsq']=validate['err']**2
 validate['rse']=np.sqrt(validate['errsq'])
 
-team=['Home Team_Benetton Treviso','Home Team_Cardiff Blues','Home Team_Connacht Rugby','Home Team_Edinburgh Rugby',\
+team=['Home Team_Benetton Treviso','Home Team_Cardiff Blues','Home Team_Connacht Rugby','Venue_BT Murrayfield',\
       'Home Team_Dragons','Home Team_Ospreys','Home Team_Scarlets','Home Team_Ulster Rugby','Home Team_Zebre Rugby',\
           'Venue_Aviva Stadium','Venue_Irish Independent Park','Venue_RDS Arena','Venue_Myreside','Venue_Thomond Park']
 
@@ -68,7 +68,7 @@ for i in team:
     x=pd.DataFrame(x).T
     rmseperteam.append(x)
 mapeDF=pd.concat(rmseperteam)
-savedfile=mapeDF.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Model/Stadium Percentage Regression Model/Val Mape.csv',index=False)
+savedfile=mapeDF.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Model/Stadium Percentage Regression Model/Val Mape(edit2).csv',index=False)
 
 """########################
 Evaluate Regression on Train and Validate set
@@ -104,6 +104,9 @@ trainResults['Squared Error']=trainResults['NormalError']**2
 trainResults['rse']=np.sqrt(trainResults['Squared Error'])
 y_train_res=list(trainResults['rse'])
 y_train_res2=list(trainResults['Error'])
+X_train2=pd.DataFrame(X_train.reset_index(drop=True))
+tot=X_train2.join(trainResults)
+tot=tot[(tot['Error']>0.2)|(tot['Error']<-0.2)]
 
 def normalise(row):
     minimum=valResults['Error'].min()
@@ -120,6 +123,9 @@ valResults['Squared Error']=valResults['NormalError']**2
 valResults['rse']=np.sqrt(valResults['Squared Error'])
 y_val_res=list(valResults['rse'])
 y_val_res2=list(valResults['Error'])
+X_val2=pd.DataFrame(X_val.reset_index(drop=True))
+tot=X_val2.join(valResults)
+tot=tot[(tot['Error']>0.2)|(tot['Error']<-0.2)]
 
 """########################
 Create a DataFrame of results for comparison later
@@ -132,11 +138,14 @@ regResult1['Overfit2']=regResult1['Overfit3']**2
 regResult1['Overfit']=np.sqrt(regResult1['Overfit2'])
 regResult1=regResult1.drop(columns=['Overfit3','Overfit2'])
 
-savedfile=regResult1.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Model/Stadium Percentage Regression Model/Stadium Percentage Regression.csv',index=False)
+savedfile=regResult1.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Model/Stadium Percentage Regression Model/Stadium Percentage Regression(edit2).csv',index=False)
 savepath='C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Model/Stadium Percentage Regression Model/'
 """########################
 Plot the Model
 """
+plt.boxplot(trainResults['Error'])
+plt.boxplot(valResults['Error'])
+
 #Scatter Plot of Residuals
 plt.scatter(y_train_pred,  y_train_res2,
             c='steelblue', marker='o', edgecolor='white',
@@ -150,7 +159,7 @@ plt.title('Stadium Percentage - Reg - Residuals vs Fitted')
 plt.legend(loc='upper left')
 plt.hlines(y=0, xmin=0, xmax=1, color='black', lw=2)
 plt.xlim([0, 1])
-plt.savefig(savepath+'Plot the Residuals.jpeg')
+plt.savefig(savepath+'Plot the Residuals(edit2).jpeg')
 plt.show()
 
 #QQ PLot of Residuals

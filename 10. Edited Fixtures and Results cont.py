@@ -205,6 +205,8 @@ gamesB.loc[((gamesB['Home Team'].str.contains('Munster'))&(gamesB['Away Team'].s
 gamesB.loc[((gamesB['Home Team'].str.contains('Ulster'))&(gamesB['Away Team'].str.contains('Leinster'))),'Derby']='Extra Derby'
 gamesB.loc[((gamesB['Home Team'].str.contains('Ulster'))&(gamesB['Away Team'].str.contains('Munster'))),'Derby']='Extra Derby'
 gamesB.loc[((gamesB['Home Team'].str.contains('Edinburgh'))&(gamesB['Away Team'].str.contains('Glasgow'))),'Derby']='Extra Derby'
+gamesB.loc[((gamesB['Home Team'].str.contains('Munster'))&(gamesB['Tournament'].str.contains('Champions'))),'Munster Euro']='Yes'
+gamesB['Munster Euro']=gamesB['Munster Euro'].fillna('No')
 
 
 gamesB['Derby']=gamesB['Derby'].fillna('Non Derby')

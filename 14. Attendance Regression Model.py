@@ -110,6 +110,7 @@ trainResults['Squared Error']=trainResults['NormalError']**2
 trainResults['rse']=np.sqrt(trainResults['Squared Error'])
 y_train_res=list(trainResults['rse'])
 y_train_res2=list(trainResults['Error'])
+
 def normalise(row):
     minimum=valResults['Error'].min()
     maximum=valResults['Error'].max()
@@ -143,6 +144,9 @@ savedfile=regResult1.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of T
 """########################
 Plot the Model
 """
+
+plt.boxplot(trainResults['Error'])
+plt.boxplot(valResults['Error'])
 #Scatter Plot of Residuals
 plt.scatter(y_train_pred,  y_train_res2,
             c='steelblue', marker='o', edgecolor='white',

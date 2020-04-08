@@ -23,8 +23,8 @@ plt.rc('axes', titlesize=18)
 attenddata=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Final Data for Model.csv', encoding='latin')
 attenddata.info()
 columns=attenddata.columns
-# for i in columns:
-#      print(i)
+for i in columns:
+     print(i)
 # attcols=['Round','Home Table Position','Away Table Position','Home Last_5_W/L','LastGame','Away Last_5_W/L','Max Temperature',\
 #          'Rain Level','Wind Speed','Home Last_3_W/L','Last Game in Comp','Home Win/Loss in Comp','Away Win/Loss in Comp','Home Total P',\
 #              'Day Of Week','Month of Year','Home Winning Percentage','homeVSaway Winning Percentage','Number ofP14 Wins','Number ofEPCR Wins',\
@@ -106,10 +106,10 @@ attenddata2=attenddata[['Round','Home Table Position','Away Table Position','Hom
                         'Wind Speed','Last Game in Comp','Home Win/Loss in Comp','Home Total P','Day Of Week','Month of Year','Home Winning Percentage',\
                             'homeVSaway Winning Percentage','Number ofP14 Wins','Years sinceEPCR Win','Stadium Age','Stadium Capacity','Table Difference',\
                                 'Sentiment','Win Probability','Tournament_Champions Cup','Tournament_League','Home Team_Benetton Treviso',\
-                                    'Home Team_Cardiff Blues','Home Team_Connacht Rugby','Home Team_Edinburgh Rugby','Home Team_Dragons','Home Team_Ospreys',\
+                                    'Home Team_Cardiff Blues','Home Team_Connacht Rugby','Venue_BT Murrayfield','Home Team_Dragons','Home Team_Ospreys',\
                                         'Home Team_Scarlets','Home Team_Ulster Rugby','Home Team_Zebre Rugby','Venue_Aviva Stadium',\
                                             'Venue_Irish Independent Park','Venue_RDS Arena','Venue_Myreside','Venue_Thomond Park','Kick Off Hour_Afternoon',\
-                                                'Kick Off Hour_Early','Derby_Derby','Derby_Extra Derby','Game Competitiveness_Cant Qualify',\
+                                                'Kick Off Hour_Early','Derby_Irish Derby','Derby_Scottish Derby','Derby_Welsh Derby','Game Competitiveness_Cant Qualify',\
                                                     'Game Competitiveness_Has Qualified','Away Country_Ireland','Away Country_Italy','Away Country_Scotland',\
                                                         'Away Country_Wales','Temperature_Cold','Temperature_Warm','Wind_Calm','Wind_Normal','Rain_Damp',\
                                                             'Rain_Wet','Age of Stadium_Middle Age','Age of Stadium_Old','Win Probability Dummy_Even',\
@@ -139,10 +139,10 @@ attendsp=attendsp[['Round','Home Table Position','Away Table Position','Home Las
                         'Wind Speed','Last Game in Comp','Home Win/Loss in Comp','Home Total P','Day Of Week','Month of Year','Home Winning Percentage',\
                             'homeVSaway Winning Percentage','Number ofP14 Wins','Years sinceEPCR Win','Stadium Age','Stadium Capacity','Table Difference',\
                                 'Sentiment','Win Probability','Tournament_Champions Cup','Tournament_League','Home Team_Benetton Treviso',\
-                                    'Home Team_Cardiff Blues','Home Team_Connacht Rugby','Home Team_Edinburgh Rugby','Home Team_Dragons','Home Team_Ospreys',\
+                                    'Home Team_Cardiff Blues','Home Team_Connacht Rugby','Venue_BT Murrayfield','Home Team_Dragons','Home Team_Ospreys',\
                                         'Home Team_Scarlets','Home Team_Ulster Rugby','Home Team_Zebre Rugby','Venue_Aviva Stadium',\
                                             'Venue_Irish Independent Park','Venue_RDS Arena','Venue_Myreside','Venue_Thomond Park','Kick Off Hour_Afternoon',\
-                                                'Kick Off Hour_Early','Derby_Derby','Derby_Extra Derby','Game Competitiveness_Cant Qualify',\
+                                                'Kick Off Hour_Early','Derby_Irish Derby','Derby_Scottish Derby','Derby_Welsh Derby','Game Competitiveness_Cant Qualify',\
                                                     'Game Competitiveness_Has Qualified','Away Country_Ireland','Away Country_Italy','Away Country_Scotland',\
                                                         'Away Country_Wales','Temperature_Cold','Temperature_Warm','Wind_Calm','Wind_Normal','Rain_Damp',\
                                                             'Rain_Wet','Age of Stadium_Middle Age','Age of Stadium_Old','Win Probability Dummy_Even',\
