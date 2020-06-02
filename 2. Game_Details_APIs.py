@@ -4,7 +4,6 @@ from urllib.error import URLError, HTTPError, ContentTooShortError
 import pandas as pd
 import time
 
-
 time
 p14=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports HTML/PRO14 HTML.csv', encoding='latin-1')
 epcr=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports HTML/EPCR Champions HTML.csv', encoding='latin-1')
@@ -18,7 +17,6 @@ check=p14[0]
 
 p14content=['sotic_wp_widget-132-content','sotic_wp_widget-134-content','sotic_wp_widget-136-content','sotic_wp_widget-141-content','sotic_wp_widget-142-content']
 epcrcontent=['sotic_wp_widget-83-content','sotic_wp_widget-36-content','sotic_wp_widget-158-content','sotic_wp_widget-155-content','sotic_wp_widget-37-content']
-
 
 def download(url, user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'\
              , num_retries=2, charset='utf-8'):
@@ -43,7 +41,6 @@ def download(url, user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWeb
 
 def find_between(s,start,end):
     return (s.split(start))[1].split(end)[0]
-##################################################
         
 epcr_api=[]
 link=0
@@ -97,8 +94,6 @@ epcr_Api_df=epcr_api_df.T
 
 savedfile=epcr_Api_df.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Report APIs/epcr API Full.csv', index=False)
 
-###################################################
-
 p14_api=[]
 link=0
 for j in p14content:
@@ -146,11 +141,6 @@ p14_Api_df=p14_api_df.T
 
 savedfile=p14_Api_df.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Report APIs/P14 API Full.csv', index=False)
 
-
-###################################################
-
-##################################################
-        
 chal_api=[]
 link=0
 for j in epcrcontent:
@@ -202,5 +192,3 @@ chal_api_df=pd.DataFrame(chal_api_html)
 chal_Api_df=chal_api_df.T
 
 savedfile=chal_Api_df.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Report APIs/chal API Full.csv', index=False)
-
-###################################################

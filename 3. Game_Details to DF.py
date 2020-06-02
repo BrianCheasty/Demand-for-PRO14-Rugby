@@ -11,8 +11,6 @@ p14=list(p14['0'])
 epcr=list(epcr['0'])
 chal=list(chal['0'])
 
-
-###############################################################################  
 p14tournament=[]
 p14matchRound=[]
 p14hometeam=[]
@@ -26,7 +24,6 @@ p14ref=[]
    
 # The JSON data contains a value which is html code, the following extracts the 
 # html code, parses it and extracts the values 
-
 
 for i in p14:
     if type(i) is not str:
@@ -102,10 +99,6 @@ for i in p14:
         Kick_Off=time2[0]
         p14kick_off.append(Kick_Off)
     
-
-
-
-
 details=[p14tournament,p14matchRound,p14date,p14kick_off,p14hometeam,p14Score,p14awayteam,p14venue,\
          p14attend,p14ref]
 p14fixture_list=pd.DataFrame(details)
@@ -113,54 +106,52 @@ p14Fixture_List=p14fixture_list.T
 p14Fixture_List=p14Fixture_List.rename(columns={0:'Tournament',1:'Round',2:'Date',\
                                           3:'Kick Off',4:'Home Team',5:'Score'\
                                           ,6:'Away Team',7:'Venue',8:'Attendance',9:'Ref'})
-    
+   
 p14Fixture_List.info()
 
-#p14Fixture_List['Date']=pd.to_datetime(p14Fixture_List['Date'],errors='coerce')
+p14Fixture_List['Date']=pd.to_datetime(p14Fixture_List['Date'],errors='coerce')
 
-#p14Fixture_List=p14Fixture_List[(p14Fixture_List['Date'].notnull())]
-#def addSeason(row):
-#    if (row['Date'] > pd.to_datetime('2003-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2004-07-15 00:00:00')):
-#        x= '2003/2004 Season'
-#    elif (row['Date'] > pd.to_datetime('2004-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2005-07-15 00:00:00')):
-#        x= '2004/2005 Season'
-#    elif (row['Date'] > pd.to_datetime('2005-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2006-07-15 00:00:00')):
-#        x= '2005/2006 Season'
-#    elif (row['Date'] > pd.to_datetime('2006-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2007-07-15 00:00:00')):
-#        x= '2006/2007 Season'
-#    elif (row['Date'] > pd.to_datetime('2007-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2008-07-15 00:00:00')):
-#        x= '2007/2008 Season'
-#    elif (row['Date'] > pd.to_datetime('2008-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2009-07-15 00:00:00')):
-#        x= '2008/2009 Season'
-#    elif (row['Date'] > pd.to_datetime('2009-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2010-07-15 00:00:00')):
-#        x= '2009/2010 Season'
-#    elif (row['Date'] > pd.to_datetime('2010-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2011-07-15 00:00:00')):
-#        x= '2010/2011 Season'
-#    elif (row['Date'] > pd.to_datetime('2011-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2012-07-15 00:00:00')):
-#        x= '2011/2012 Season'
-#    elif (row['Date'] > pd.to_datetime('2012-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2013-07-15 00:00:00')):
-#        x= '2012/2013 Season'
-#    elif (row['Date'] > pd.to_datetime('2013-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2014-07-15 00:00:00')):
-#        x= '2013/2014 Season'
-#    elif (row['Date'] > pd.to_datetime('2014-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2015-07-15 00:00:00')):
-#        x= '2014/2015 Season'
-#    elif (row['Date'] > pd.to_datetime('2015-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2016-07-15 00:00:00')):
-#        x= '2015/2016 Season'
-#    elif (row['Date'] > pd.to_datetime('2016-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2017-07-15 00:00:00')):
-#        x= '2016/2017 Season'
-#    elif (row['Date'] > pd.to_datetime('2017-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2018-07-15 00:00:00')):
-#        x= '2017/2018 Season'
-#    elif (row['Date'] > pd.to_datetime('2018-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2019-07-15 00:00:00')):
-#        x= '2018/2019 Season'
-#    else:
-#        x= '2019/2020 Season'
-#    return x
-#
-#p14Fixture_List['Season']=p14Fixture_List.apply(lambda row: addSeason(row), axis=1)
+p14Fixture_List=p14Fixture_List[(p14Fixture_List['Date'].notnull())]
+def addSeason(row):
+    if (row['Date'] > pd.to_datetime('2003-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2004-07-15 00:00:00')):
+        x= '2003/2004 Season'
+    elif (row['Date'] > pd.to_datetime('2004-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2005-07-15 00:00:00')):
+        x= '2004/2005 Season'
+    elif (row['Date'] > pd.to_datetime('2005-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2006-07-15 00:00:00')):
+        x= '2005/2006 Season'
+    elif (row['Date'] > pd.to_datetime('2006-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2007-07-15 00:00:00')):
+        x= '2006/2007 Season'
+    elif (row['Date'] > pd.to_datetime('2007-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2008-07-15 00:00:00')):
+        x= '2007/2008 Season'
+    elif (row['Date'] > pd.to_datetime('2008-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2009-07-15 00:00:00')):
+        x= '2008/2009 Season'
+    elif (row['Date'] > pd.to_datetime('2009-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2010-07-15 00:00:00')):
+        x= '2009/2010 Season'
+    elif (row['Date'] > pd.to_datetime('2010-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2011-07-15 00:00:00')):
+        x= '2010/2011 Season'
+    elif (row['Date'] > pd.to_datetime('2011-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2012-07-15 00:00:00')):
+        x= '2011/2012 Season'
+    elif (row['Date'] > pd.to_datetime('2012-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2013-07-15 00:00:00')):
+        x= '2012/2013 Season'
+    elif (row['Date'] > pd.to_datetime('2013-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2014-07-15 00:00:00')):
+        x= '2013/2014 Season'
+    elif (row['Date'] > pd.to_datetime('2014-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2015-07-15 00:00:00')):
+        x= '2014/2015 Season'
+    elif (row['Date'] > pd.to_datetime('2015-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2016-07-15 00:00:00')):
+        x= '2015/2016 Season'
+    elif (row['Date'] > pd.to_datetime('2016-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2017-07-15 00:00:00')):
+        x= '2016/2017 Season'
+    elif (row['Date'] > pd.to_datetime('2017-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2018-07-15 00:00:00')):
+        x= '2017/2018 Season'
+    elif (row['Date'] > pd.to_datetime('2018-07-15 00:00:00')) & (row['Date'] < pd.to_datetime('2019-07-15 00:00:00')):
+        x= '2018/2019 Season'
+    else:
+        x= '2019/2020 Season'
+    return x
+
+p14Fixture_List['Season']=p14Fixture_List.apply(lambda row: addSeason(row), axis=1)
 
 savedFile=p14Fixture_List.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Main Content/P14 Main Content.csv',index=False)
-
-############################################################################### 
 
 epcrtournament=[]
 epcrmatchRound=[]
@@ -267,11 +258,11 @@ epcrFixture_List=epcrFixture_List.rename(columns={0:'Tournament',1:'Round',2:'Da
     
 epcrFixture_List.info()
 
-#epcrFixture_List['Date']=pd.to_datetime(epcrFixture_List['Date'],errors='coerce')
+epcrFixture_List['Date']=pd.to_datetime(epcrFixture_List['Date'],errors='coerce')
 
-#epcrFixture_List=epcrFixture_List[(epcrFixture_List['Date'].notnull())]
+epcrFixture_List=epcrFixture_List[(epcrFixture_List['Date'].notnull())]
 
-#epcrFixture_List['Season']=epcrFixture_List.apply(lambda row: addSeason(row), axis=1)
+epcrFixture_List['Season']=epcrFixture_List.apply(lambda row: addSeason(row), axis=1)
 epcrFixture_List['Round']=epcrFixture_List['Round'].str.strip()
 epcrFixture_List['Score']=epcrFixture_List['Score'].str.strip()
 epcrFixture_List['Venue']=epcrFixture_List['Venue'].str.strip()
@@ -282,10 +273,6 @@ epcrFixture_List['Date']=epcrFixture_List['Date'].str.strip()
 epcrFixture_List['Ref']=epcrFixture_List['Ref'].str.strip()
 epcrFixture_List.info()
 savedFile=epcrFixture_List.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Main Content/EPCR Main Content.csv', index=False)
-
-
-
-############################################################################### 
 
 chaltournament=[]
 chalmatchRound=[]
@@ -392,11 +379,11 @@ chalFixture_List=chalFixture_List.rename(columns={0:'Tournament',1:'Round',2:'Da
     
 chalFixture_List.info()
 
-#chalFixture_List['Date']=pd.to_datetime(chalFixture_List['Date'],errors='coerce')
+chalFixture_List['Date']=pd.to_datetime(chalFixture_List['Date'],errors='coerce')
 
-#chalFixture_List=chalFixture_List[(chalFixture_List['Date'].notnull())]
+chalFixture_List=chalFixture_List[(chalFixture_List['Date'].notnull())]
 
-#chalFixture_List['Season']=chalFixture_List.apply(lambda row: addSeason(row), axis=1)
+chalFixture_List['Season']=chalFixture_List.apply(lambda row: addSeason(row), axis=1)
 chalFixture_List['Round']=chalFixture_List['Round'].str.strip()
 chalFixture_List['Score']=chalFixture_List['Score'].str.strip()
 chalFixture_List['Venue']=chalFixture_List['Venue'].str.strip()

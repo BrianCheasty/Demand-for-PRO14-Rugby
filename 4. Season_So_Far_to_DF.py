@@ -12,8 +12,6 @@ epcr=list(epcr['3'])
 chal=list(chal['3'])
 
 
-############################################################################### 
-
 Season_So_far=[]
 for i in p14:
     if type(i) is not str:
@@ -51,64 +49,64 @@ yellow_cards=[]
 red_cards=[]
 
 for i in Season_So_far:
-    #total_points.append(i[0])
+    total_points.append(i[0])
     tries.append(i[1])
-    #conversions.append(i[2])
-    #dropgoals.append(i[3])
-    #penalties.append(i[4])
+    conversions.append(i[2])
+    dropgoals.append(i[3])
+    penalties.append(i[4])
     metres_gained.append(i[5])
-    #carries.append(i[6])
+    carries.append(i[6])
     passes_made.append(i[7])
     tackles_made.append(i[8])
-    #tackles_missed.append(i[9])
+    tackles_missed.append(i[9])
     turnovers_won.append(i[10])
-   #turnovers_conceded.append(i[11])
+    turnovers_conceded.append(i[11])
     penalties_conceded.append(i[12])
-    #yellow_cards.append(i[13])
-    #red_cards.append(i[14])
+    yellow_cards.append(i[13])
+    red_cards.append(i[14])
     
-#home_total_score =[]
-#for i in total_points:
-#    home_total_score.append(i[0])
-#away_total_score =[]
-#for i in total_points:
-#    away_total_score.append(i[2])  
+home_total_score =[]
+for i in total_points:
+    home_total_score.append(i[0])
+away_total_score =[]
+for i in total_points:
+    away_total_score.append(i[2])  
 home_total_tries =[]
 for i in tries:
     home_total_tries.append(i[0])
 away_total_tries =[]
 for i in tries:
     away_total_tries.append(i[2])
-#home_total_conversions =[]
-#for i in conversions:
-#    home_total_conversions.append(i[0])
-#away_total_conversions =[]
-#for i in conversions:
-#    away_total_conversions.append(i[2])
-#home_total_dropgoals =[]
-#for i in dropgoals:
-#    home_total_dropgoals.append(i[0])
-#away_total_dropgoals =[]
-#for i in dropgoals:
-#    away_total_dropgoals.append(i[2])
-#home_total_penalties =[]
-#for i in penalties:
-#    home_total_penalties.append(i[0])
-#away_total_penalties =[]
-#for i in penalties:
-#    away_total_penalties.append(i[2])
+home_total_conversions =[]
+for i in conversions:
+    home_total_conversions.append(i[0])
+away_total_conversions =[]
+for i in conversions:
+    away_total_conversions.append(i[2])
+home_total_dropgoals =[]
+for i in dropgoals:
+    home_total_dropgoals.append(i[0])
+away_total_dropgoals =[]
+for i in dropgoals:
+    away_total_dropgoals.append(i[2])
+home_total_penalties =[]
+for i in penalties:
+    home_total_penalties.append(i[0])
+away_total_penalties =[]
+for i in penalties:
+    away_total_penalties.append(i[2])
 home_total_metres_gained =[]
 for i in metres_gained:
     home_total_metres_gained.append(i[0])
 away_total_metres_gained =[]
 for i in metres_gained:
     away_total_metres_gained.append(i[2])
-#home_total_carries =[]
-#for i in carries:
-#    home_total_carries.append(i[0])
-#away_total_carries =[]
-#for i in carries:
-#    away_total_carries.append(i[2])
+home_total_carries =[]
+for i in carries:
+    home_total_carries.append(i[0])
+away_total_carries =[]
+for i in carries:
+    away_total_carries.append(i[2])
 home_total_passes_made =[]
 for i in passes_made:
     home_total_passes_made.append(i[0])
@@ -121,12 +119,12 @@ for i in tackles_made:
 away_total_tackles_made =[]
 for i in tackles_made:
     away_total_tackles_made.append(i[2])
-#home_total_tackles_missed =[]
-#for i in tackles_missed:
-#    home_total_tackles_missed.append(i[0])
-#away_total_tackles_missed =[] 
-#for i in tackles_missed:
-#    away_total_tackles_missed.append(i[2])
+home_total_tackles_missed =[]
+for i in tackles_missed:
+    home_total_tackles_missed.append(i[0])
+away_total_tackles_missed =[] 
+for i in tackles_missed:
+    away_total_tackles_missed.append(i[2])
 home_total_turnovers_won =[] 
 for i in turnovers_won:
     home_total_turnovers_won.append(i[0])
@@ -134,31 +132,29 @@ away_total_turnovers_won =[]
 for i in turnovers_won:
     away_total_turnovers_won.append(i[2])
 home_total_turnovers_conceded =[]
-#for i in turnovers_conceded:
-#    home_total_turnovers_conceded.append(i[0])
-#away_total_turnovers_conceded =[]
-#for i in turnovers_conceded:
-#    away_total_turnovers_conceded.append(i[2])
+for i in turnovers_conceded:
+    home_total_turnovers_conceded.append(i[0])
+away_total_turnovers_conceded =[]
+for i in turnovers_conceded:
+    away_total_turnovers_conceded.append(i[2])
 home_total_penalties_conceded =[]
 for i in penalties_conceded:
     home_total_penalties_conceded.append(i[0])
 away_total_penalties_conceded =[]
 for i in penalties_conceded:
     away_total_penalties_conceded.append(i[2])
-#home_total_yellow_cards =[]
-#for i in yellow_cards:
-#    home_total_yellow_cards.append(i[0])
-#away_total_yellow_cards =[]
-#for i in yellow_cards:
-#    away_total_yellow_cards.append(i[2])
-#home_total_red_cards =[]
-#for i in red_cards:
-#    home_total_red_cards.append(i[0])
-#away_total_red_cards =[]
-#for i in red_cards:
-#    away_total_red_cards.append(i[2])
-
-
+home_total_yellow_cards =[]
+for i in yellow_cards:
+    home_total_yellow_cards.append(i[0])
+away_total_yellow_cards =[]
+for i in yellow_cards:
+    away_total_yellow_cards.append(i[2])
+home_total_red_cards =[]
+for i in red_cards:
+    home_total_red_cards.append(i[0])
+away_total_red_cards =[]
+for i in red_cards:
+    away_total_red_cards.append(i[2])
 
 details=[home_total_tries,away_total_tries,\
          home_total_metres_gained,away_total_metres_gained,\
@@ -176,8 +172,6 @@ Fixture_List=Fixture_List.rename(columns={0:'Home Total Tries',1: 'Away Total Tr
                                           10:'Home Total Penalties Conceded',11:'Away Total Penalties Conceded'})
 
 savedFile=Fixture_List.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Season So Far Content/P14 Season So Far.csv',index=False)
-
-###############################################################################  
 
 home_total_tries=[]
 away_total_tries=[]
@@ -278,9 +272,6 @@ Fixture_List=Fixture_List.rename(columns={0:'Home Total Tries',1: 'Away Total Tr
 
 savedFile=Fixture_List.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Season So Far Content/EPCR Season So Far.csv',index=False)
 
-
-#################################################################
-
 home_total_tries=[]
 away_total_tries=[]
 home_total_metres_gained=[]
@@ -379,6 +370,3 @@ Fixture_List=Fixture_List.rename(columns={0:'Home Total Tries',1: 'Away Total Tr
                                           10:'Home Total Penalties Conceded',11:'Away Total Penalties Conceded'})
 
 savedFile=Fixture_List.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Season So Far Content/Chal Season So Far.csv',index=False)
-
-
-#################################################################

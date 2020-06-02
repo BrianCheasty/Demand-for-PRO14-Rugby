@@ -2,9 +2,8 @@ import pandas as pd
 
 df=pd.read_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Feature Creation/Data for Model.csv', encoding='latin-1')
 df.info()
-df.loc[(df['Venue'].str.contains('Comunale di Monigo')),'Venue']='Venue_Stadio Monigo'
-df.loc[(df['Venue'].str.contains('Murrayfield')),'Venue']='BT Murrayfield'
-df['Win Prob Squared']=((df['Win Probability']-.5)*100)**2
+
+
 df=df[(~df['Venue'].str.contains('Ghirada|Constructaquote|Eugene Cross|Meggetland|Morganstone|Tommaso|Zaffanella|Principality'))]
 df2=pd.get_dummies(df)
 columns=df2.columns

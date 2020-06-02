@@ -11,9 +11,6 @@ p14=list(p14['1'])
 epcr=list(epcr['2'])
 chal=list(chal['2'])
 
-
-############################################################################### 
-
 hometeam_position=[]
 awayteam_position=[]
 
@@ -44,9 +41,6 @@ Fixture_List=Fixture_List.rename(columns={0:'Home Table Pos',1:'Away Table Pos'}
 
 savedFile=Fixture_List.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Current Standing Content/P14 Current Standing.csv',index=False)
 
-
-###############################################################################
-
 homeResults=[]
 awayResults=[]
 for i in epcr:
@@ -76,9 +70,6 @@ Fixture_List[1]=Fixture_List[1].str.strip()
 Fixture_List=Fixture_List.rename(columns={0:'Home Table Pos',1:'Away Table Pos'})
 
 savedFile=Fixture_List.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Current Standing Content/EPCR Current Standing.csv',index=False)
-
-
-###############################################################################
 
 homeResults=[]
 awayResults=[]

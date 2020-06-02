@@ -11,9 +11,6 @@ p14=list(p14['2'])
 epcr=list(epcr['1'])
 chal=list(chal['1'])
 
-
-############################################################################### 
-
 head2head=[]
 for i in p14:
     apijson = i[ i.index("(") + 1 : i.rindex(")") ]
@@ -47,9 +44,9 @@ for i in head2head:
 _played =[]
 for i in played:
     _played.append(i[0])
-#away_played =[]
-#for i in played:
-#    away_played.append(i[2]) 
+away_played =[]
+for i in played:
+    away_played.append(i[2]) 
     
 home_wins =[]
 for i in wins:
@@ -58,19 +55,19 @@ away_wins =[]
 for i in wins:
     away_wins.append(i[2]) 
     
-#home_losses =[]
-#for i in losses:
-#    home_losses.append(i[0])
-#away_losses =[]
-#for i in losses:
-#    away_losses.append(i[2]) 
+home_losses =[]
+for i in losses:
+    home_losses.append(i[0])
+away_losses =[]
+for i in losses:
+    away_losses.append(i[2]) 
     
 _draws =[]
 for i in draws:
     _draws.append(i[0])
-#away_draws =[]
-#for i in draws:
-#    away_draws.append(i[2]) 
+away_draws =[]
+for i in draws:
+    away_draws.append(i[2]) 
     
 home_h2htries =[]
 for i in h2htries:
@@ -87,8 +84,6 @@ Fixture_List=Fixture_List.rename(columns={0:'Played',1:'Home Wins',2:'Away Wins'
                                           3:'Draws',4:'Home h2htries',5:'Away h2htries'})
 
 savedFile=Fixture_List.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Head to Head Content/P14 Head to Head.csv',index=False)
-
-###############################################################################
 
 _played =[]
 home_wins =[]
@@ -146,9 +141,6 @@ Fixture_List['Home h2htries']=Fixture_List['Home h2htries'].str.strip()
 Fixture_List['Away h2htries']=Fixture_List['Away h2htries'].str.strip()
 
 savedFile=Fixture_List.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports Content/Head to Head Content/EPCR Head to Head.csv',index=False)
-
-
-###############################################################################
 
 _played =[]
 home_wins =[]

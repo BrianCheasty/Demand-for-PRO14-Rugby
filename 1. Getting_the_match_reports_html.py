@@ -6,16 +6,16 @@ import pandas as pd
 import time
 
 
-""" This script is used to download the html of the relevant match reports from the PRO14
-    and EPCR websites"""
+#This script is used to download the html of the relevant match reports from the PRO14
+#and EPCR websites
 
-#The following urls are the pages where the match reports are stored
+#The following urls are the pages where the match reports are stored, PRO14 has been updated, suggest editing to site map
 p14url='https://www.pro14rugby.org/report/page/'
 epcrurl='https://www.epcrugby.com/category/champions-cup-match-reports/page/'
 chalurl='https://www.epcrugby.com/category/challenge-cup-match-reports/page/'
 
 # A function called download is created to download the html from any pages required
-def download(url, user_agent='Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36'\
+def download(url, user_agent='Insert user agent'\
              , num_retries=2, charset='utf-8'):
     print('Downloading:', url)
     request = urllib.request.Request(url)
@@ -79,8 +79,6 @@ for i in p14links:
 
 p14htmldf=pd.DataFrame(p14html_list)
 savedfile=p14htmldf.to_csv('C:/Users/bcheasty/OneDrive - Athlone Institute Of Technology/Research Project/Data Set Creation/Data/Match Reports HTML/PRO14 HTML.csv', index=False)
-
-
 
 
 time.sleep(200) 
