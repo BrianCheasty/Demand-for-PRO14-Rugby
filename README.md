@@ -10,3 +10,6 @@ The purpose of this research was to establish the forecast accuracy for attendan
 •	The kick-off time of the game
 •	The impact of winning titles
 •	Their team's performance in the last three games
+
+All scripts are numbered in order that they should be run
+Script 1 needs to be updated with new PRO14 site map before it will run properly
